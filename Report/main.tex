@@ -1,0 +1,124 @@
+\documentclass[12pt, twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{etoolbox}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{xstring}
+\usepackage{multicol}
+\usepackage{tikz-dimline}
+\usepackage{pdfpages}
+\usepackage{setspace}
+
+% To get current section name %
+\usepackage{nameref}
+\makeatletter
+\newcommand*{\currentname}{\@currentlabelname}
+\makeatother
+
+
+% bibliography setup %
+\usepackage[backend = biber,sorting = none]{biblatex}
+\addbibresource{references.bib}
+
+
+% On the spot flowchart creation %
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+% Image setup %
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+
+% Link setup %
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue, citecolor = black}
+
+
+% caption layout for tables and images %
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup[table]{skip=7pt}
+\captionsetup[figure]{skip=7pt}
+
+
+\geometry{a4paper,left = 30mm,right = 20mm,top = 30mm,bottom = 22mm}
+\textwidth = 160mm
+\textheight = 245mm
+\footskip = 7mm
+
+% header formatting %
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{Chapter \thechapter}
+\fancyhead[RE]{Section \thesection}
+\fancyhead[CO]{\currentname}
+\fancyfoot[CE,CO]{\thepage}
+
+
+% Paragraph and line spacing %
+\setlength{\parindent}{12mm}
+\setlength{\parskip}{2.5mm}
+
+
+% title formatting %
+\titleformat{\chapter}[block]{\Huge\bfseries}{\chaptertitlename \ \thechapter}{0.5ex}
+{
+    \rule{\textwidth}{0pt}
+    \vspace{1ex}
+    \centering
+}
+\titlespacing{\thechapter}{0mm}{12mm}{12mm}
+
+
+% Section formatting %
+\titleformat{\section}[hang]{\fontsize{16}{16}\bfseries}{ \thesection}{1.4em}{}
+\titlespacing{\thesection}{}{15mm}{15mm}
+
+% Subsection formatting %
+\titleformat{\subsection}[hang]{\fontsize{14}{14}\bfseries}{ \thesubsection}{1.4em}{}
+\titlespacing{\thesubsection}{}{15mm}{15mm}
+
+% First level ordered list %
+\setlist[enumerate,1]{label=(\alph*)}
+
+
+\begin{document}
+
+
+\includepdf[pages=-]{auxiliary_pages}
+\pagenumbering{roman}
+\input{abstract}
+\setcounter{page}{4}
+
+\renewcommand*\contentsname{Table of Contents}
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\input{content/Chapter1}
+\input{content/Chapter2}
+\input{content/Chapter3}
+\input{content/Chapter4}
+\input{content/Chapter5}
+\input{content/Chapter6}
+\input{content/Chapter7}
+
+
+\newpage
+\printbibliography
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\input{acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+
+\end{document}
