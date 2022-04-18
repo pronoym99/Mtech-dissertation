@@ -1,1 +1,30 @@
 \chapter{Literature review} \label{chapter2}
+
+\section{YoLo – A brief discussion on v3 and v4 for real-time object detection}
+
+\section{Performance metrics for evaluating object detection models}
+
+\section{Guidelines for a good YoLo project}
+The following rules for a good project using YoLo are mere \textit{thumb – rules} and are not some strict guidelines to be followed and should be evaluated on a case to case basis for every project. Additionally, it should be noted that such rules may not be applicable for implementation in every object detection project. The following rules are bifurcated into those undertaken during the training and those in the testing (detection) phase.
+
+\subsection{For training}
+
+\begin{enumerate}
+  \item The values of {\fontfamily{qcr}\selectfont random} should be set to $1$ in your  {\fontfamily{qcr}\selectfont .cfg} file which allows training for multiple image or video resolutions simultaneously.
+  \item Every distinct object that is liable for detection must have an appropriate label in the dataset.
+  \item Precision may be increased by keeping the height and width of images or video frames as a multiple of $32$.
+  \item The training dataset should be such that every object to be detected corresponds to an exactly similar object in the training dataset. Similarity should be in terms of size, no. of detected classes ($N$), overall spatial orientation, overall illumination, augmentation (if any) etc. \par
+
+  If the no. of classes is $c$ and the no. of classes is stated as above then training must run for at least $Nc$ iterations.
+  \item Training datasets should have as many \textbf{positive} examples as there are \textbf{negative} examples (i.e. images which don’t have any object to be detected). Such negative examples shall return no bounding boxes when the detection or testing run is executed. These ensure an equal sensitivity of the model to both types of images as well as eliminate a lot of post-processing operations.
+  \item Sometimes it is desirable to run your detections with the {\fontfamily{qcr}\selectfont -show\_imgs} option at the end so that it can be manually verified whether the predicted bounding boxes are correct or not. Seeing the detections and detecting some anomaly could be a direct implication of training runs going wrong or some inherent problem in the dataset.
+\end{enumerate}
+
+
+\subsection{For testing or detection}
+
+\begin{enumerate}
+  \item Increase network resolution in the same way as mentioned in 1. c.
+  \item It should be noted that retraining is not required in the event of loss in your dataset or any other unintended corruption. Only the \textit{darknet} command should be available which can be used to perform detections using the pre-trained {\fontfamily{qcr}\selectfont .weights} file which was trained on the $416 \times 416$ resolution images.
+  \item To further enhance the accuracy, dataset training must proceed onto higher multiples of  $32$ such as $608 \times 608$ or $832 \times 832$. In the event of a memory overflow ({\fontfamily{qcr}\selectfont Out of memory}), {\fontfamily{qcr}\selectfont subdivisions} in your {\fontfamily{qcr}\selectfont .cfg} file must be increased from $16$ to $32$ to $64$ and so on.
+\end{enumerate}
