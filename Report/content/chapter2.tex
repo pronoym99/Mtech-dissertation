@@ -1,6 +1,24 @@
 \chapter{Literature review} \label{chapter2}
 
 \section{YoLo – A brief discussion on v3 and v4 for real-time object detection}
+YoLo standing for You Only Look Once is(are) a set of advanced deep learning models for real-time object detection. The focal point for YoLo is that it manages to perform bounding box regression and classification at the same time. The architecture or methodology which separates YoLo and other object detection frameworks is that other sophisticated frameworks (RCNN and even Fast RCNN) attempt to repurpose existing classifiers and localisers to perform object detection. They apply a single model to multiple locations within an image with variations in scale and other properties of the image multiple times. High scoring regions are labelled and classified accordingly. \par
+
+YoLo frameworks take a drastically different approach: they divide the region into a large number of regions (or boxes) and simultaneously apply a single convolutional neural network to the entire image. The bounding boxes and associated probabilities are received at the output. These regions are then weighted according to these probabilities. The reason why this method supersedes other popular methods is that other neural network-based deep learning architectures (such as R-CNN) may end up using multiple network evaluations (in the order of thousands) on a single image that takes up a considerable amount of processing time. Additionally, YoLo models look at the entirety of the image during the detection phase because of which their predictions are based on the global context of the image. Although the differences don’t end here, these fundamental differences are enough to give YoLo a second to third order speed advantage over Fast R-CNN and R-CNN models. \par
+
+The neural network for YoLo along with its entire compilation system is known as Darknet. A typical darknet run on an image, set of images, video or a real-time stream of image content (such as through a webcam) leads to the following three things as output:
+
+\begin{itemize}
+  \item The detected classes of objects (e.g. horse, car etc.)
+  \item	The prediction confidence (e.g. $0.91$, $0.86$ etc.) and
+  \item	The time it took to carry out the prediction or detection (e.g. $6$s, $12$s etc.)
+  \item	Sophisticated high-level libraries will also produce the bounding boxes corresponding to each
+\end{itemize}
+
+Following is the output when a high-level library like \href{https://pypi.org/project/yolov4/}{yolov4} is used to process an image as shown below.
+
+\subsection{YoLov3}
+
+\subsection{YoLov4 – improvements over YoLov3}
 
 \section{Performance metrics for evaluating object detection models}
 
