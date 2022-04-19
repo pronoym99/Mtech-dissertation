@@ -14,7 +14,7 @@ The neural network for YoLo along with its entire compilation system is known as
   \item	Sophisticated high-level libraries will also produce the bounding boxes corresponding to each
 \end{itemize}
 
-\vspace{-0.7in}
+\vspace{-0.2in}
 
 Following is the output when a high-level library like \href{https://pypi.org/project/yolov4/}{yolov4} is used to process an image as shown below.
 
@@ -44,7 +44,36 @@ Following is the output when a high-level library like \href{https://pypi.org/pr
 
 \end{figure}
 
+
+
 \subsection{YoLov3}
+Joseph Redmond is credited with designing the original neural network architecture called Darknet. This was made using all low-level languages so that it could be made as flexible as it can be. This architecture went on to produce a series of computer vision wonders in the field of object detection named as YoLo: the original one, v2, v3 and then v4. Even YoLov5 has been developed (the first one to be developed by an organisation as opposed to an individual) at the time of writing this report. However, we won’t be discussing it here since it hasn’t been used in the concerned project. \par
+
+YoLov3 is the first version using an objectivity score for the prediction of bounding boxes. It also proceeds to add further connections to the backbone of the entire architecture. Additionally, detections are also carried out at three levels of granularity which greatly increased the inferencing accuracy on smaller objects as well as objects/ smaller objects placed close to each other. There are some important parts or sections in YoLov3 which proves its robustness to a variety of real-life object detection scenarios. They relate to better bounding box prediction, class prediction, their feature extractor as well better prediction across multiple scales provided in the input. We would be discussing each of them in brief in the following paragraphs. \par
+
+\subsubsection{Bounding box prediction}
+Any bounding box in a prediction is represented by a set of four parameters namely $t_x$ and $t_y$: coordinates of the centre of the bounding box and its width and height represented by $t_w$ and $t_h$ respectively. In the event of the top left corner of the bounding box being displaced by $(c_x,c_y)$ respectively, the following overall changes are calculated in the dimensions (assume $p_w$ and $p_h$ are the width and height of the bounding box prior).
+\begin{align*}
+b_x &=  \sigma(t_x) + c_x \\
+b_y &=  \sigma(t_y) + c_y \\
+b_w &=  {p_w}e^{t_w} \\
+b_h &=  {p_h}e^{t_h}
+\end{align*}
+Unlike previous systems (or previous YoLo versions), the training phase assigns an objectness score to each bounding box. This score equals one if the current bounding box overlaps a ground truth object to an extent greater than any other previously obtained bounding box. If any previously obtained bounding box doesn’t overlap the ground truth to a greater extent or overlaps only by a certain threshold (say $0.5$ as stated in this paper) then the objectness score is simply zero. Following is a representation of all the important dimensions which are involved in this process.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{chapter2/bounding_box.png}
+  \caption{An illustration showing all the important bounding box dimesnions being used in YoLov3}
+  \label{fig:bbox}
+\end{figure}
+
+\subsubsection{Class prediction}
+SoftMax is one of the most common types of methods used for multi-label classification, however, the method has been leading to decrementing results for the class prediction accuracy in YoLov3 as well as has been unnecessary. Therefore, simple multiple logistic classifiers are being used for the purpose and binary cross-entropy has been used as a loss function. This different approach helped in the case of much larger and more sophisticated datasets such as the Open Images Dataset wherein labels may overlap frequently. SoftMax algorithm assumes that a single bounding box corresponds to exactly one label which is often not the case.
+
+\subsubsection{Feature extraction}
+Feature extraction in YoLov3 has been a hybridisation of the one in YoLov2, Darknet – 19 ($19$ convolutional layers) and another residual network. But the most important part of this network is shortcut connections which increase the size of the network significantly, however, continue to supersede ResNet variants in terms of efficiency. Since this leads to a total of $\boldsymbol{53}$ convolutional layers it's named Darknet-53.
+
 
 \subsection{YoLov4 – improvements over YoLov3}
 
