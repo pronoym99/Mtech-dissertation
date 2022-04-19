@@ -12,25 +12,32 @@ The neural network for YoLo along with its entire compilation system is known as
   \item	The prediction confidence (e.g. $0.91$, $0.86$ etc.) and
   \item	The time it took to carry out the prediction or detection (e.g. $6$s, $12$s etc.)
   \item	Sophisticated high-level libraries will also produce the bounding boxes corresponding to each
-\end{itemize} \par
+\end{itemize}
+
+\vspace{-0.7in}
 
 Following is the output when a high-level library like \href{https://pypi.org/project/yolov4/}{yolov4} is used to process an image as shown below.
 
 \begin{figure}[h]
 
 \begin{center}
-\begin{subfigure}{0.5\textwidth}
-  \includegraphics[width=0.5\linewidth, height=6cm]{chapter2/person.jpeg}
-  \caption{A sample image taken from the original Darknet github repository}
+\begin{subfigure}{0.7\textwidth}
+  \includegraphics[width=\linewidth, height=5cm]{chapter2/person.jpeg}
+  \caption{A sample image taken from the original Darknet \href{https://github.com/AlexeyAB/darknet}{github repository}}
   \label{fig:person_sub1}
- \end{subfigure}
- \begin{subfigure}{0.5\textwidth}
-  \includegraphics[width=0.5\linewidth, height=6cm]{chapter2/personresult.png}
-  \caption{Electronics hardware assembly}
+ \end{subfigure} \\
+ \begin{subfigure}{0.7\textwidth}
+  \includegraphics[width=\linewidth, height=5cm]{chapter2/personresult.png}
+  \caption{Bounding boxes and detected objects in the image}
   \label{fig:person_sub2}
+  \end{subfigure} \\
+  \begin{subfigure}{0.7\textwidth}
+   \includegraphics[width=\linewidth, height=5cm]{chapter2/personboxes.png}
+   \caption{The bounding box coordinates obtained}
+   \label{fig:person_sub3}
  \end{subfigure}
 
- \caption{The PCB prototyping machine as described in the reference manual}
+ \caption{A sample Darknet run on an image}
  \label{fig:person_ref}
 
 \end{center}
