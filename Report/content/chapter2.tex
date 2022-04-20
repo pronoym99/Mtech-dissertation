@@ -97,14 +97,14 @@ The neck is the common name for a feature aggregator in YoLo frameworks i.e. it 
 \subsubsection{Head}
 This is the final stage of the entire framework: a common name for the object detector stage in YoLo frameworks. It should be noted that this stage exclusively tells the region(s) in which (an) object(s) may be located, however, doesn’t tell the class or label to which the object belongs. As stated earlier, these could be a single or two-stage detector, both anchor-based and anchor-free. Some common examples are YOLO, RetinaNet, SSD, Faster – RCNN etc.
 
-As the number of examples in each stage shows, a typical YoLov4 framework can be implemented in any combination of input, backbone, neck and head. When there are such a large number of combinations possible, the best architecture should be an optimal combination of all the sections. This optimal choice would alone make it superior to YoLov3 in terms of performance and accuracy. This optimal combination should be arrived at by looking at the following parameters:
+As the number of examples in each stage shows, a typical YoLov4 framework can be implemented in any combination of input, backbone, neck and head. When there are such a large number of combinations possible, the best architecture should be an optimal combination of all the sections. This optimal choice would alone make it superior to YoLov3 in terms of \textbf{performance and accuracy}. This optimal combination should be arrived at by looking at the following parameters:
 
 \begin{itemize}
 \item Input resolution of images and their size
 \item Number of convolutional layers
 \item Number of parameters (hyperparameters) to be optimised
 \item Number of output layers or filters
-\item YoLov4 also provides something known as Bag of Specials and Bag of Freebies which are methods or functions for increasing the respective fields and mappings between backbone levels to detector levels. This gives us another region wherein optimisation can be done.
+\item YoLov4 also provides something known as \textit{Bag of Specials} and \textit{Bag of Freebies} which are methods or functions for increasing the respective fields and mappings between backbone levels to detector levels. This gives us another region wherein optimisation can be done.
 
 \end{itemize}
 
@@ -170,6 +170,50 @@ All these discussions prove the benefits and advantages of YoLov4 over YoLov3 an
 
 
 \section{Performance metrics for evaluating object detection models}
+
+The entirety of this report deals with a large number of performance metrics used to evaluate a variety of ML/DL models. Some are popular and have been used to evaluate such models for a long time while some metrics are empirical in nature because their output is a combination of a variety of models dealing with different classes of inputs and outputs which are working together. However, we would be specifically discussing metrics used for the evaluation of the performance of object detection models in this section.
+\subsection{Intersection over Union (IoU)}
+This metric equals the amount of overlap between the ground truth denoted by $g_t$ and the predicted value by a particular model i.e. prediction denoted by $p_d$. It is to be noted that since this value is a ratio, it is a fraction consisting of numerator and denominator areas in appropriate units. Mathematically, it is given by
+\begin{equation}
+\centering
+IoU = \frac{area({g_{t}}\cap{ p_{d }})}{area({g_{t}}\cup{ p_{d }})}
+\end{equation}
+As it is very obvious for any arbitrary situation $0 \leqslant $ IoU $\leqslant 1$ wherein $0$ corresponds to a null overlap and $1$ corresponds to a full overlap. However, in almost all ML/DL models we don’t go for such strict definitions rather we define what we call the IoU at $\alpha$ (or abbreviated as IoU@$\alpha$). This means any value of IoU $\geqslant \alpha$ is considered a true positive whereas any value otherwise is considered a true negative. \par
+
+Before we go ahead and define the next important metric we need to know a couple of different terms as stated below:
+\begin{itemize}
+ \item \textbf{Precision} – The degree to which a model can identify only the relevant objects. It is simply the ratio of true positives and all the detections made by the model. It is given by
+\begin{equation}
+\centering
+P = \frac{True \ positives}{All \ detections \ made \ by \ the \ model}
+\end{equation}
+ \item \textbf{Recall} – The degree to which the model can detect all true positives amongst all ground truths. Mathematically, it is the ratio of the number of true positives and all ground truths and is given by
+\begin{equation}
+\centering
+R = \frac{True \ positives}{All \ ground \ truths}
+
+\end{equation}
+
+\textbf{A good model has a high precision as well as high recall}.
+
+ \item \textbf{Precision–recall curve} – It is simply the plot of the variation of precision and recall against the variation of confidence values. A good model will give high precision values even when confidence is varied significantly.
+ \item \textbf{Average precision} – When the area under the precision-recall curve is calculated at the IoU@$\alpha$ threshold then we get this value. Formally, it is defined using the following integral.
+\begin{equation}
+\centering
+AP@\alpha = \int\limits_{0}^{1} p(r) \ \mathrm{d} r
+\end{equation}
+
+\end{itemize}
+
+Now we are at a stage where we can understand the next important metric
+
+\subsection{Mean Average Precision (mAP)}
+For each class, the average precision as defined above is calculated. This roughly translates to No. of average precision values $\approx$ No. of classes. When the average of these average precision is taken we get what we know as the mean average precision. For $n$ classes we can simply calculate it as follows:
+\begin{equation}
+\centering
+mAP@\alpha = \frac{1}{n} \sum_{i=1}^{n} AP_{i}
+\end{equation}
+
 
 \section{Guidelines for a good YoLo project}
 The following rules for a good project using YoLo are mere \textit{thumb – rules} and are not some strict guidelines to be followed and should be evaluated on a case to case basis for every project. Additionally, it should be noted that such rules may not be applicable for implementation in every object detection project. The following rules are bifurcated into those undertaken during the training and those in the testing (detection) phase.
