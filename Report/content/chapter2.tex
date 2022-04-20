@@ -63,7 +63,7 @@ Unlike previous systems (or previous YoLo versions), the training phase assigns 
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.8]{chapter2/bounding_box.png}
+  \includegraphics[scale=0.7]{chapter2/bounding_box.png}
   \caption{An illustration showing all the important bounding box dimesnions being used in YoLov3}
   \label{fig:bbox}
 \end{figure}
@@ -76,6 +76,98 @@ Feature extraction in YoLov3 has been a hybridisation of the one in YoLov2, Dark
 
 
 \subsection{YoLov4 – improvements over YoLov3}
+
+The fundamental difference between YoLov4 and all its previous variants is that the detector stage has been bifurcated into two distinct sections consisting of a single stage – detector and sparse prediction stage. Following is an illustration of the same.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.5]{chapter2/detector_stages.png}
+  \caption{Two stage detector setup used in YoLov4}
+  \label{fig:detector}
+\end{figure}
+
+After the initial input phase, we have $\boldsymbol{3}$ main sections as follows.
+
+\subsubsection{Backbone}
+This is the common name for the feature extractor section of the entire neural network architecture. It should be noted that all backbones are essentially classification models. With VGG16 being the most common and the earliest deep learning classifiers, SqueezeNet, ShuffleNET and MobileNET are used along with it. These classifiers are meant for the CPU only.
+
+\subsubsection{Neck}
+The neck is the common name for a feature aggregator in YoLo frameworks i.e. it collects the feature maps from various sections of the backbone stage. FPN, PAN, NAS-FPN, Fully-connected FPN, BiFPN, ASFF, and SFAM are all examples of feature aggregation blocks used in YoLov4.
+
+\subsubsection{Head}
+This is the final stage of the entire framework: a common name for the object detector stage in YoLo frameworks. It should be noted that this stage exclusively tells the region(s) in which (an) object(s) may be located, however, doesn’t tell the class or label to which the object belongs. As stated earlier, these could be a single or two-stage detector, both anchor-based and anchor-free. Some common examples are YOLO, RetinaNet, SSD, Faster – RCNN etc.
+
+As the number of examples in each stage shows, a typical YoLov4 framework can be implemented in any combination of input, backbone, neck and head. When there are such a large number of combinations possible, the best architecture should be an optimal combination of all the sections. This optimal choice would alone make it superior to YoLov3 in terms of performance and accuracy. This optimal combination should be arrived at by looking at the following parameters:
+
+\begin{itemize}
+\item Input resolution of images and their size
+\item Number of convolutional layers
+\item Number of parameters (hyperparameters) to be optimised
+\item Number of output layers or filters
+\item YoLov4 also provides something known as Bag of Specials and Bag of Freebies which are methods or functions for increasing the respective fields and mappings between backbone levels to detector levels. This gives us another region wherein optimisation can be done.
+
+\end{itemize}
+
+\newpage
+
+The final architecture that was deemed optimal for YoLov4 is as follows (with backbone, neck and head in order).
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[node distance=4cm]
+    \node (backbone) [process] {CSPDarknet53};
+    \node (neck) [process, right of=backbone] {SSP $+$ PANet};
+    \node (head) [process, right of=neck] {YoLov3};
+    \draw [arrow] (backbone) -- (neck);
+    \draw [arrow] (neck) -- (head);
+  \end{tikzpicture}
+  \caption{The final architecture presented in the paper}
+  \label{fig:final_arch}
+\end{figure}
+
+A couple of other combinations were derived but the FPS of the above combination superseded everything else.  A summary of the FPS values of a couple of other possibilities is given below. Now we are going to see some special sections of the architecture (but are not limited to) in detail which make it more efficient than YoLov3.
+
+\begin{table}[h]
+ \def\arraystretch{1.5}
+ \centering
+ \caption{Neural network parameters for image recognition for $512 \times 512$ network resolution}
+ \begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  Backbone model & Receptive field size & Parameters & Average layer size & BFLOPs & FPS\\
+  \hline
+  CSPResNext50 & $425 \times 425$  & $20.6$ mn & $1058$ K & $31$ & $62$                   \\
+  \hline
+  CSPDarknet53 & $725 \times 725$ & $27.6$ mn & $950$ K & $52$ & $66$                        \\
+  \hline
+  EfficientNet & $1311 \times 1311$ & $12$ & $668$ K & $11$ & $26$                        \\
+  \hline
+ \end{tabular}
+ \label{tab:mccons}
+\end{table}
+
+
+\subsubsection{Cross Stage Partial connection (CSP)}
+In any large neural network-based architecture, it is common for the last and the second to last layers to lose out on a lot of contextual features seen by the initial layers. A way out of this is to introduce the concept of skip connections so that the backpropagation of gradients to the initial layers can be done easily. DenseNet was initially considered for this but it had skip connections between every other layer which proved to be inefficient. So, the researchers stuck with their initial choice of CSPResNext50 and the CSPDarknet53 as far as the architecture is concerned. Following is an illustration of the same.
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.5]{chapter2/dense_architectures.png}
+  \caption{The two possible dense architectures: DenseNet and CSPDensnet}
+  \label{fig:dense_arch}
+\end{figure}
+
+\subsubsection{Self-Adversarial Training (SAT)}
+Deep learning is very much susceptible to adversarial data so YoLov4 uses SAT to introduce precise amounts of perturbation in the data such that the predicted label stays the same as the original label. This helps it easily achieve good accuracies for even augmentations of simple images.
+
+All these discussions prove the benefits and advantages of YoLov4 over YoLov3 and hence it's choice for the project. As always, all things are better quantified in a graph of MAP versus execution time as shown below.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.8]{chapter2/v3v4.png}
+  \caption{YoLov4 vs other state of the art object detectors}
+  \label{fig:v3_vs_v4}
+\end{figure}
+
 
 \section{Performance metrics for evaluating object detection models}
 
