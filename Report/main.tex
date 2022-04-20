@@ -96,8 +96,10 @@
 
 \includepdf[pages=-]{auxiliary_pages}
 \pagenumbering{roman}
-\input{abstract}
+\input{acknowledgements}
 \setcounter{page}{4}
+\input{abstract}
+
 
 \renewcommand*\contentsname{Table of Contents}
 \tableofcontents
@@ -119,7 +121,7 @@
 \printbibliography
 \addcontentsline{toc}{chapter}{Bibliography}
 
-\input{acknowledgements}
-\addcontentsline{toc}{chapter}{Acknowledgements}
+
+% \addcontentsline{toc}{chapter}{Acknowledgements}
 
 \end{document}

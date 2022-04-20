@@ -47,12 +47,12 @@ Following is the output when a high-level library like \href{https://pypi.org/pr
 
 
 \subsection{YoLov3}
-Joseph Redmond is credited with designing the original neural network architecture called Darknet. This was made using all low-level languages so that it could be made as flexible as it can be. This architecture went on to produce a series of computer vision wonders in the field of object detection named as YoLo: the original one, v2, v3 and then v4. Even YoLov5 has been developed (the first one to be developed by an organisation as opposed to an individual) at the time of writing this report. However, we won’t be discussing it here since it hasn’t been used in the concerned project. \par
+Joseph Redmond is credited with designing the original neural network architecture called Darknet. This was made using all low-level languages so that it could be made flexible as it can be. This architecture went on to produce a series of computer vision wonders in the field of object detection named as YoLo: the original one, v2, v3 and then v4. Even YoLov5 has been developed (the first one to be developed by an organisation as opposed to an individual) at the time of writing this report. However, we won’t be discussing it here since it hasn’t been used in the concerned project. \par
 
 YoLov3 is the first version using an objectivity score for the prediction of bounding boxes. It also proceeds to add further connections to the backbone of the entire architecture. Additionally, detections are also carried out at three levels of granularity which greatly increased the inferencing accuracy on smaller objects as well as objects/ smaller objects placed close to each other. There are some important parts or sections in YoLov3 which proves its robustness to a variety of real-life object detection scenarios. They relate to better bounding box prediction, class prediction, their feature extractor as well better prediction across multiple scales provided in the input. We would be discussing each of them in brief in the following paragraphs. \par
 
 \subsubsection{Bounding box prediction}
-Any bounding box in a prediction is represented by a set of four parameters namely $t_x$ and $t_y$: coordinates of the centre of the bounding box and its width and height represented by $t_w$ and $t_h$ respectively. In the event of the top left corner of the bounding box being displaced by $(c_x,c_y)$ respectively, the following overall changes are calculated in the dimensions (assume $p_w$ and $p_h$ are the width and height of the bounding box prior).
+Any bounding box in a prediction is represented by a set of four parameters namely $t_x$ and $t_y$: coordinates of the centre of the bounding box and its width and height represented by $t_w$ and $t_h$ respectively. In the event of the top left corner of the bounding box being displaced by $(c_x,c_y)$ respectively, the following overall changes are calculated in the dimensions (let $p_w$ and $p_h$ be the width and height of the bounding box from the previous iteration).
 \begin{align*}
 b_x &=  \sigma(t_x) + c_x \\
 b_y &=  \sigma(t_y) + c_y \\
@@ -64,7 +64,7 @@ Unlike previous systems (or previous YoLo versions), the training phase assigns 
 \begin{figure}
   \centering
   \includegraphics[scale=0.7]{chapter2/bounding_box.png}
-  \caption{An illustration showing all the important bounding box dimesnions being used in YoLov3}
+  \caption{An illustration showing all the important bounding box dimensions being used in YoLov3}
   \label{fig:bbox}
 \end{figure}
 
@@ -82,7 +82,7 @@ The fundamental difference between YoLov4 and all its previous variants is that 
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.5]{chapter2/detector_stages.png}
-  \caption{Two stage detector setup used in YoLov4}
+  \caption{Two-stage detector setup used in YoLov4}
   \label{fig:detector}
 \end{figure}
 
@@ -157,9 +157,9 @@ In any large neural network-based architecture, it is common for the last and th
 \end{figure}
 
 \subsubsection{Self-Adversarial Training (SAT)}
-Deep learning is very much susceptible to adversarial data so YoLov4 uses SAT to introduce precise amounts of perturbation in the data such that the predicted label stays the same as the original label. This helps it easily achieve good accuracies for even augmentations of simple images.
+Deep learning is very much susceptible to \textit{adversarial data} so YoLov4 uses SAT to introduce precise amounts of perturbation in the data such that the predicted label stays the same as the original label. This helps it easily achieve good accuracies for even augmentations of simple images.
 
-All these discussions prove the benefits and advantages of YoLov4 over YoLov3 and hence it's choice for the project. As always, all things are better quantified in a graph of MAP versus execution time as shown below.
+All these discussions prove the benefits and advantages of YoLov4 over YoLov3 and hence it's choice for the project. As always, all things are better quantified in a graph of mAP versus execution time as shown below.
 
 \begin{figure}[h]
   \centering
