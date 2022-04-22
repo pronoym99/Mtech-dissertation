@@ -11,7 +11,12 @@ We realise that the problems discussed above are as technical as they are humane
 
 Fortunately, for this project, the deployment of the data models falls within its current scope. All the ML models which would be trained and tested would be loaded onto the proprietary Ezmeral MLOPs platform by HPE. The servers for the same reside alongside the required hardware resources on SEBI’s internal servers. Doing this (without going into the details) would make the entire process streamlined i.e. the process of uploading videos, and training models on new data as soon as it is available and at the same time would decrease the manual work involved while doing so. As soon as the deployment has been completed, whether for all the NEWS shows or even a few of them, the internal server would be able to serve requests from within the organization domain (POST methods with JSON body) and at the same time would be able to abstract all the complex code and scripts running in the background. Following is an illustration of the complete MLOPs lifecycle which is allowed by (or within) the Ezmeral MLOPs platform.
 
-(insert appropriate image here)
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.9]{chapter4/ML_DL lifecycle.jpeg}
+  \caption{Machine learning lifecycle in production}
+  \label{fig:ml_dl_cycle}
+\end{figure}
 
 \section{A two-part deployment}
 
@@ -20,9 +25,14 @@ This section deals with the needs of SEBI requiring a two-part deployment and th
 \subsection{Ezmeral MLOPs} \label{ezmeral}
 
 The remaining part of the literature survey deals with a proper yet brief study of the very exhaustive HPE Ezmeral official documentation to send these models to production. It should be noted that the Ezmeral platform is quite large and only a small part of it deals with proper MLOPs. An even smaller part concerns the project at hand due to the nature of the license procured by the governing organization (SEBI) i.e., we won’t be looking at complicated use cases involving Kubernetes clusters or anything similar. Only the relevant parts of the study have been mentioned below.
-The entire Ezmeral architecture looks something like this:
+The entire Ezmeral architecture looks something as follows. \newpage
 
-(insert image of Ezmeral ml dl solution)
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{chapter4/ML_DL solution.jpeg}
+  \caption{The Ezmeral MLOPs solution}
+  \label{fig:ml_dl_sol}
+\end{figure}
 
 As per the above architecture following are some sequential steps to be followed while deploying a model to production: \cite{Chiang2020}
 
@@ -62,14 +72,50 @@ We shall elaborate on the last point a little further. Execution of the scoring 
 
 \section{Overall software flow}
 
-(insert appropriate flowchart)
-
 \textbf{Step 1}: Open a connection with the remote SEBI Datalake server. Exit the program if a timeout error occurs with an appropriate exit code. \\[5mm]
 \textbf{Step 2}: Fetch the next video file in sequence from the remote server. \\[5mm]
 \textbf{Step 3}: Run the Python scoring script on the same. This will lead to the production of a log file. And a CSV file only if the execution is successful. \\[5mm]
 \textbf{Step 4}: Delete the video file. \\[5mm]
 \textbf{Step 5}: Send a copy of the log file to the server and delete its instance from the VM. \\[5mm]
 \textbf{Step 6}: If \textbf{Step 3} was successful, send a copy of the generated CSV file to the remote server and delete its instance from the VM.
+
+
+\end{enumerate}
+
+The entirety of the above process flow has been shown on page \pageref{fig:soft_process_flow}.
+
+\begin{figure}[h]
+ \centering
+ \begin{tikzpicture}[node distance=2cm]
+  \node (start) [startstop] {Start};
+  \node (conn) [process, below of=start, yshift=0.5cm] {Open connection with remote server};
+  \node (dec1) [decision, below of=conn, yshift=-1.5cm] {Connection timeout?};
+  \node (stop1) [startstop, right of=dec1, xshift=3.5cm] {Stop};
+  \node (fetch) [process, below of=dec1, yshift=-1.5cm] {Fetch video file from server};
+  \node (exec) [process, below of=fetch, yshift=0.5cm] {Execute scoring script};
+  \node (del_video) [process, below of=exec, yshift=0.5cm] {Delete video file};
+  \node (send_del_log) [process, below of=del_video, yshift=0.5cm] {Send log file to server and delete from VM};
+  \node (dec2) [decision, below of=send_del_log, yshift=-1.5cm] {Successful execution?};
+  \node (stop2) [startstop, right of=dec2, xshift=3.5cm] {Stop};
+  \node (send_del_csv) [process, below of=dec2, yshift=-1.5cm] {Send CSV file to server and delete from VM};
+  \node (stop) [startstop, below of=send_del_csv,yshift=0.5cm] {Stop};
+  \draw [arrow] (start) -- (conn);
+  \draw [arrow] (conn) -- (dec1);
+  \draw [arrow] (dec1) -- node[anchor=west] {No} (fetch);
+  \draw [arrow] (dec1) -- node[anchor=south] {Yes} (stop1);
+  \draw [arrow] (fetch) -- (exec);
+  \draw [arrow] (exec) -- (del_video);
+  \draw [arrow] (del_video) -- (send_del_log);
+  \draw [arrow] (send_del_log) -- (dec2);
+  \draw [arrow] (dec2) -- node[anchor=west] {Yes} (send_del_csv);
+  \draw [arrow] (dec2) -- node[anchor=south] {No} (stop2);
+  \draw [arrow] (send_del_csv) -- (stop);
+ \end{tikzpicture}
+ \caption{Overall software process flow represented as a simple flowchart}
+ \label{fig:soft_process_flow}
+\end{figure}
+
+
 
 \section{Guidelines for deployment}
 
@@ -85,5 +131,3 @@ This section presents a set of guidelines for the two types of deployment detail
 \item Classify whether you would be dealing with batch workflows or predictions by your ML models in real-time as detailed in sections \ref{vm} and \ref{ezmeral} respectively as this shall greatly affect your outcome.
 
 \item If you are dealing with batch workflows as in section \ref{vm}, the order of fetching and deleting files is paramount. Classify files into input, files produced irrespective of the status of the result and files produced only on successful execution. Order them by size and the sequential points of failure. Delete the largest input file(s) first followed by sequential cycles of sending files to the remote server and deleting them.
-
-\end{enumerate}
