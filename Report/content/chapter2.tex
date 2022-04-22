@@ -1,9 +1,9 @@
 \chapter{Literature review} \label{chapter2}
 
 \section{YoLo – A brief discussion on v3 and v4 for real-time object detection} \label{brief_discuss}
-YoLo standing for You Only Look Once is(are) a set of advanced deep learning models for real-time object detection. The focal point for YoLo is that it manages to perform bounding box regression and classification at the same time. The architecture or methodology which separates YoLo and other object detection frameworks is that other sophisticated frameworks (RCNN and even Fast RCNN) attempt to repurpose existing classifiers and localisers to perform object detection \cite{Srivastava2021}. They apply a single model to multiple locations within an image with variations in scale and other properties of the image multiple times. High scoring regions are labelled and classified accordingly. \par
+YoLo standing for \textbf{You Only Look Once} is(are) a set of advanced deep learning models for real-time object detection. The focal point for YoLo is that it manages to perform bounding box regression and classification at the same time. The architecture or methodology which separates YoLo and other object detection frameworks is that other sophisticated frameworks (RCNN and even Fast RCNN) attempt to repurpose existing \textit{classifiers} and \textit{localisers} to perform object detection \cite{Srivastava2021}. They apply a single model to multiple locations within an image with variations in scale and other properties of the image multiple times. \textbf{High scoring regions} are labelled and classified accordingly. \par
 
-YoLo frameworks take a drastically different approach: they divide the region into a large number of regions (or boxes) and simultaneously apply a single convolutional neural network to the entire image. The bounding boxes and associated probabilities are received at the output. These regions are then weighted according to these probabilities. The reason why this method supersedes other popular methods is that other neural network-based deep learning architectures (such as R-CNN) may end up using multiple network evaluations (in the order of thousands) on a single image that takes up a considerable amount of processing time. Additionally, YoLo models look at the entirety of the image during the detection phase because of which their predictions are based on the global context of the image. Although the differences don’t end here, these fundamental differences are enough to give YoLo a second to third order speed advantage over Fast R-CNN and R-CNN models. \par
+YoLo frameworks take a drastically different approach: they divide the region into a large number of regions (or boxes) and simultaneously apply a \textit{single convolutional neural network} to the entire image. The bounding boxes and associated probabilities are received at the output. These regions are then weighted according to these probabilities. The reason why this method supersedes other popular methods is that other neural network-based deep learning architectures (such as R-CNN) may end up using multiple network evaluations (in the order of thousands) on a single image that takes up a considerable amount of processing time. Additionally, YoLo models look at the entirety of the image during the detection phase because of which their predictions are based on the \textbf{global context of the image}. Although the differences don’t end here, these fundamental differences are enough to give YoLo a second to third order speed advantage over Fast R-CNN and R-CNN models. \par
 
 The neural network for YoLo along with its entire compilation system is known as Darknet. A typical darknet run on an image, set of images, video or a real-time stream of image content (such as through a webcam) leads to the following three things as output:
 
@@ -59,7 +59,7 @@ b_y &=  \sigma(t_y) + c_y \\
 b_w &=  {p_w}e^{t_w} \\
 b_h &=  {p_h}e^{t_h}
 \end{align*}
-Unlike previous systems (or previous YoLo versions), the training phase assigns an objectness score to each bounding box. This score equals one if the current bounding box overlaps a ground truth object to an extent greater than any other previously obtained bounding box. If any previously obtained bounding box doesn’t overlap the ground truth to a greater extent or overlaps only by a certain threshold (say $0.5$ as stated in this paper) then the objectness score is simply zero. Following is a representation of all the important dimensions which are involved in this process.
+Unlike previous systems (or previous YoLo versions), the training phase assigns an \textbf{objectness} score to each bounding box. This score equals one if the current bounding box overlaps a ground truth object to an extent greater than any other previously obtained bounding box. If any previously obtained bounding box doesn’t overlap the ground truth to a greater extent or overlaps only by a certain threshold (say $0.5$ as stated in this paper) then the objectness score is simply zero. Following is a representation of all the important dimensions which are involved in this process.
 
 \begin{figure}
   \centering
@@ -72,12 +72,12 @@ Unlike previous systems (or previous YoLo versions), the training phase assigns 
 SoftMax is one of the most common types of methods used for multi-label classification, however, the method has been leading to decrementing results for the class prediction accuracy in YoLov3 as well as has been unnecessary. Therefore, simple multiple logistic classifiers are being used, and \textbf{binary cross-entropy} has been used as a loss function. This different approach helped in the case of much larger and more sophisticated datasets such as the Open Images Dataset wherein labels may overlap frequently. SoftMax algorithm assumes that a single bounding box corresponds to exactly one label which is often not the case.
 
 \subsubsection{Feature extraction}
-Feature extraction in YoLov3 has been a hybridisation of the one in YoLov2, Darknet – 19 ($19$ convolutional layers) and another residual network. But the most important part of this network is shortcut connections which increase the size of the network significantly, however, continue to supersede ResNet variants in terms of efficiency. Since this leads to a total of $\boldsymbol{53}$ convolutional layers it's named Darknet-53.
+Feature extraction in YoLov3 has been a hybridisation of the one in YoLov2, Darknet – 19 ($19$ convolutional layers) and another residual network. But the most important part of this network is \textit{shortcut connections} which increase the size of the network significantly, however, continue to supersede ResNet variants in terms of efficiency. Since this leads to a total of $\boldsymbol{53}$ convolutional layers it's named Darknet-53.
 
 
 \subsection{YoLov4 – improvements over YoLov3 \cite{bochkovskiy2020yolov4}}
 
-The fundamental difference between YoLov4 and all its previous variants is that the detector stage has been bifurcated into two distinct sections consisting of a single stage – detector and sparse prediction stage. Following is an illustration of the same.
+The fundamental difference between YoLov4 and all its previous variants is that the detector stage has been bifurcated into two distinct sections consisting of a \textit{single stage – detector} and \textit{sparse prediction stage}. Following is an illustration of the same.
 
 \begin{figure}[h]
   \centering
@@ -89,13 +89,13 @@ The fundamental difference between YoLov4 and all its previous variants is that 
 After the initial input phase, we have $\boldsymbol{3}$ main sections as follows \cite{Rajput2021}.
 
 \subsubsection{Backbone}
-This is the common name for the feature extractor section of the entire neural network architecture. It should be noted that all backbones are essentially classification models. With VGG16 being the most common and the earliest deep learning classifiers, SqueezeNet, ShuffleNET and MobileNET are used along with it. These classifiers are meant for the CPU only.
+This is the common name for the \textit{feature extractor} section of the entire neural network architecture. It should be noted that all backbones are essentially classification models. With \textbf{VGG16} being the most common and the earliest deep learning classifiers, SqueezeNet, ShuffleNET and MobileNET are used along with it. These classifiers are meant for the CPU only.
 
 \subsubsection{Neck}
-The neck is the common name for a feature aggregator in YoLo frameworks i.e. it collects the feature maps from various sections of the backbone stage. FPN, PAN, NAS-FPN, Fully-connected FPN, BiFPN, ASFF, and SFAM are all examples of feature aggregation blocks used in YoLov4.
+The neck is the common name for a \textit{feature aggregator} in YoLo frameworks i.e. it collects the feature maps from various sections of the backbone stage. FPN, PAN, NAS-FPN, Fully-connected FPN, BiFPN, ASFF, and SFAM are all examples of feature aggregation blocks used in YoLov4.
 
 \subsubsection{Head}
-This is the final stage of the entire framework: a common name for the object detector stage in YoLo frameworks. It should be noted that this stage exclusively tells the region(s) in which (an) object(s) may be located, however, doesn’t tell the class or label to which the object belongs. As stated earlier, these could be a single or two-stage detector, both anchor-based and anchor-free. Some common examples are YOLO, RetinaNet, SSD, Faster – RCNN etc.
+This is the final stage of the entire framework: a common name for the \textit{object detector} stage in YoLo frameworks. It should be noted that this stage exclusively tells the region(s) in which (an) object(s) may be located, however, doesn’t tell the class or label to which the object belongs. As stated earlier, these could be a single or two-stage detector, both anchor-based and anchor-free. Some common examples are YOLO, RetinaNet, SSD, Faster – RCNN etc.
 
 As the number of examples in each stage shows, a typical YoLov4 framework can be implemented in any combination of input, backbone, neck and head. When there are such a large number of combinations possible, the best architecture should be an optimal combination of all the sections. This optimal choice would alone make it superior to YoLov3 in terms of \textbf{performance and accuracy}. This optimal combination should be arrived at by looking at the following parameters:
 
