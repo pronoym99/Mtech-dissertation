@@ -34,7 +34,12 @@ It is a known fact that almost all deep learning systems (inclusive of computer 
 
 It should be noted that no execution environment discussed earlier in chapter \ref{chapter4} had any mention of GPUs so there was a decrease in execution time by a large margin for the same test video. The decrease of roughly by a factor of $4.5$ w.r.t. to the closest competitor i.e. for execution recorded on a standalone VM. The reason for this was obvious: the documentation of EasyOCR mentions that their pipeline is more performant in the presence of a GPU \cite{Jaided}. Following are the results summarised in the form of a bar chart.
 
-(insert appropriate bar graph)
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{chapter5/barchart2.png}
+  \caption{A comparison of execution times across a variety of development environments with a variety of hardware configurations}
+  \label{fig:hardware}
+\end{figure}
 
 \section{Current workflow progress and testing procedures}
 
@@ -44,7 +49,32 @@ As stated in earlier chapters, the work at hand is to process a total of $7$ NEW
 
 The following table lists the shows on one side and the percentage of total videos of each show that has been processed.
 
-(insert appropriate table)
+\begin{table}[h]
+ \def\arraystretch{1.5}
+ \centering
+ \caption{Batch workflow progress}
+ \begin{tabular}{|c|c|}
+  \hline
+  NEWS show & Progress (in \%)\\
+  \hline
+  Buy Now Sell Now & $10$                   \\
+  \hline
+  Pehla Sauda & $25$                   \\
+  \hline
+  NSE Closing Bell & $10$                   \\
+  \hline
+  Bazaar Morning Call & $10$                   \\
+  \hline
+  Midcap Bazaar & $35$                 \\
+  \hline
+  Stock 20-20 & $100$                \\
+  \hline
+  Weekly Roundup & \textbf{Omitted}               \\
+  \hline
+ \end{tabular}
+ \label{tab:news_prog}
+\end{table}
+
 
 \subsection{Testing procedures}
 
@@ -66,7 +96,12 @@ It would be worthwhile to reason why an OCR engine is not directly used on the e
 
 The reason lies in the abilities of EasyOCR as an OCR engine which is both an advantage as well as a disadvantage. It should be known that, unlike Tesseract which uses page segmentation modes \cite{Rosebroc2021} to detect text in an image structurally arranged in specific configurations, EasyOCR doesn’t have any such facility. It directly returns a list of bounding box coordinates, the text detected along with a confidence score across the entire image \cite{Jaided}. Following is an example of what would happen if signboards containing multiple texts are passed to EasyOCR.
 
-(insert appropriate image)
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.45]{chapter5/example2.png}
+  \caption{Execution of EasyOCR on three signboards}
+  \label{fig:easy_signboard}
+\end{figure}
 
 We would realise that all texts scattered throughout the image are returned, however, we are unable to draw any correlation between them at first look. This could prove to be a major challenge in this project wherein multiple related numerical and alphanumeric values are placed close to each other. In an extreme case where multiple recommendations are detected in the same frame, it would be very difficult to detect the mapping of the numerical values (such as stop-loss or target price) and the listing symbol of a company share. Hence, the choice of using an object detection model followed by an OCR engine.
 
@@ -107,7 +142,7 @@ The current system does filtering at only the FPS rate which manages to reduce t
 
 Theoretically, we can say that for the problem statement at hand; there exists a program $P$ that extracts and processes exactly $N$ frames such that the total no. of recommendations being made, $R$ is contained in exactly $N$ keyframes. \par
 
-To do so we can use an adaptive frame extraction algorithm \cite{adapt} which shall extract only the frames which are important to us. This method is based on matching histograms of successive frames, a correlation that exists amongst their colour channels, etc. This shall greatly reduce the number of frames to be processed at a time (apart from the already existing FPS rate filtering). This method, however, could be tending to fail because similar-looking frames need not be redundant to us just because they appear close to each other in the actual video. In that case, we can go for an alternative approach wherein the frame numbers are output according to a simple implementation of any multi-output regressor \cite{Brownlee2020}. Since there could be inherent inaccuracies in the training of the same, we can use a spreading factor $\delta$ which shall extract keyframes starting from ${f}_{k} - \Delta$ to ${f}_{k} + \Delta$ instead of just the frame $f_k$.
+To do so we can use an adaptive frame extraction algorithm \cite{adapt} which shall extract only the frames which are important to us. This method is based on matching histograms of successive frames, a correlation that exists amongst their colour channels, etc. This shall greatly reduce the number of frames to be processed at a time (apart from the already existing FPS rate filtering). This method, however, could be tending to fail because similar-looking frames need not be redundant to us just because they appear close to each other in the actual video. In that case, we can go for an alternative approach wherein the frame numbers are output according to a simple implementation of any multi-output regressor \cite{Brownlee2020}. Since there could be inherent inaccuracies in the training of the same, we can use a spreading factor $\Delta$ which shall extract keyframes starting from ${f}_{k} - \Delta$ to ${f}_{k} + \Delta$ instead of just the frame $f_k$.
 
 \subsection{Usability}
 
