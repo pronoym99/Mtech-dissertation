@@ -30,6 +30,57 @@ Still, EasyOCR (and the project) benefits even further from a possible change in
 
 \section{Comparison between hardware architectures}
 
+It is a known fact that almost all deep learning systems (inclusive of computer vision models) benefit greatly from the presence of GPUs in the development environment. Although as of now the Ezmeral cluster doesn’t have GPU access, testing was still performed on a local workstation with a \href{ https://www.nvidia.com/en-in/geforce/20-series/}{RTX 2060} graphics card with the equivalent Nvidia \href{https://developer.nvidia.com/cuda-toolkit}{CUDA toolkit} installed. \par
+
+It should be noted that no execution environment discussed earlier in chapter \ref{chapter4} had any mention of GPUs so there was a decrease in execution time by a large margin for the same test video. The decrease of roughly by a factor of $4.5$ w.r.t. to the closest competitor i.e. for execution recorded on a standalone VM. The reason for this was obvious: the documentation of EasyOCR mentions that their pipeline is more performant in the presence of a GPU \cite{Jaided}. Following are the results summarised in the form of a bar chart.
+
+(insert appropriate bar graph)
+
+\section{Current workflow progress and testing procedures}
+
+\subsection{Workflow progress}
+
+As stated in earlier chapters, the work at hand is to process a total of $7$ NEWS shows in their entirety (excluding only one for the lack of recommendations in it) to summarise all the recommendations being provided in them. This shall ensure that when more sophisticated anomaly detection models are run on them, the input (produced as an output from my project) is sufficient for them to run properly. Additionally, it should also be noted that the systems succeeding the ones used in this project also use several data cleaning procedures before arriving at a final output so a picture-perfect output is not necessary although desirable. \par
+
+The following table lists the shows on one side and the percentage of total videos of each show that has been processed.
+
+(insert appropriate table)
+
+\subsection{Testing procedures}
+
+Usually, there are no clearly defined testing procedures for such custom projects in deep learning and computer vision. A typical testing procedure that was used to verify the authenticity and the accuracy of the output is that after filtering out frames at the FPS rate, the recommendations being made in a handful of videos were noted down manually. This was then compared to the output obtained from the program. If there is a perfect match (which was mostly the case), then the output is deemed to be suitable otherwise no separate improvements are made midway in a batch processing workflow. The reason for this is two-fold:
+
+\begin{enumerate}
+
+ \item Batch processing workflows involve a very large number of videos at once, stopping them in between drastically decreases the efficiency of such workflows and the more important reason being
+
+ \item Anomaly detection systems or models which follow this project already employ sufficient data cleaning procedures to obtain a reliable and usable output within tolerable error limits.
+
+\end{enumerate}
+
+\section{Inferences and learnings}
+
+\subsection{Possible usage of only an OCR engine}
+
+It would be worthwhile to reason why an OCR engine is not directly used on the extracted frames since it would detect the required text followed by which the programmer is supposed to consolidate it to a usable form. \par
+
+The reason lies in the abilities of EasyOCR as an OCR engine which is both an advantage as well as a disadvantage. It should be known that, unlike Tesseract which uses page segmentation modes \cite{Rosebroc2021} to detect text in an image structurally arranged in specific configurations, EasyOCR doesn’t have any such facility. It directly returns a list of bounding box coordinates, the text detected along with a confidence score across the entire image \cite{Jaided}. Following is an example of what would happen if signboards containing multiple texts are passed to EasyOCR.
+
+(insert appropriate image)
+
+We would realise that all texts scattered throughout the image are returned, however, we are unable to draw any correlation between them at first look. This could prove to be a major challenge in this project wherein multiple related numerical and alphanumeric values are placed close to each other. In an extreme case where multiple recommendations are detected in the same frame, it would be very difficult to detect the mapping of the numerical values (such as stop-loss or target price) and the listing symbol of a company share. Hence, the choice of using an object detection model followed by an OCR engine.
+
+\subsection{Procurement of data from a contractor}
+
+It has been clearly stated in section \ref{vid_data} that the entirety of the video data was obtained from \href{clipbyte.com}{Clipbyte}. It would be worthwhile to argue that all videos could be directly downloaded from a platform like \href{youtube.com}{YouTube}. However, there are two major reasons for not doing so:
+\begin{enumerate}
+ \item All broadcasts of the concerned NEWS shows are not available on such video platforms and nor do the respective channels upload videos in a timed and orderly manner.
+
+ \item There is no official way to download videos from such a platform so availing videos from such a platform by a Government regulatory body would imply improper means of accessing publicly available information in the situation wherein the InVestigations Department (IVD) of SEBI has to file a case against a suspected entity. The data source needs to be mentioned in the case file and hence a separate contractor has been tended for this job.
+
+\end{enumerate}
+
+
 
 \section{Accuracy, empirical accuracy and execution time}
 
@@ -48,16 +99,20 @@ A_{e} = \frac{No. \ of  \ NA \ values \ in \ the \ CSV}{Total \ no. \ of \ value
 Measuring execution time remains the same i.e. in seconds although at a couple of places wherein the execution time is large, seconds have been replaced by larger units of time.
 \section{Future work}
 
-The current system can be improvised in two different areas as given below.
+The current system can be improvised in two different areas as given below. A workflow improvement can also be made.
 
 \subsection{Accuracy and efficiency}
 
 The current system does filtering at only the FPS rate which manages to reduce the number of frames under consideration to a much smaller value (a $25$\textsuperscript{th} of it to be precise). However, as we have seen in chapter \ref{chapter3}, the frame selection is still not inherently intelligent and still leads to the production of  $ \approx 1400$ frames on an average, amongst which frames would be manually selected for annotation. \par
 
-Theoretically, we can say that for the problem statement at hand; there exists a program $P$ that extracts and processes exactly $N$ frames such that the total no. of recommendations being made is $R \leqslant N$. \par
+Theoretically, we can say that for the problem statement at hand; there exists a program $P$ that extracts and processes exactly $N$ frames such that the total no. of recommendations being made, $R$ is contained in exactly $N$ keyframes. \par
 
-To do so we can use an adaptive frame extraction algorithm \cite{adapt} which shall extract only the frames which are important to us. This method is based on matching histograms of successive frames, a correlation that exists amongst their colour channels, etc. This shall greatly reduce the number of frames to be processed at a time (apart from the already existing FPS rate filtering). This method, however, could be tending to fail because similar-looking frames need not be redundant to us just because they appear close to each other in the actual video. In that case, we can go for an alternative approach wherein the frame numbers are output according to a simple implementation of any multi-output regressor \cite{ Brownlee2020}. Since there could be inherent inaccuracies in the training of the same, we can use a spreading factor $\delta$ which shall extract keyframes starting from ${f}_{k} - \delta$ to ${f}_{k} + \delta$ instead of just the frame $f_k$.
+To do so we can use an adaptive frame extraction algorithm \cite{adapt} which shall extract only the frames which are important to us. This method is based on matching histograms of successive frames, a correlation that exists amongst their colour channels, etc. This shall greatly reduce the number of frames to be processed at a time (apart from the already existing FPS rate filtering). This method, however, could be tending to fail because similar-looking frames need not be redundant to us just because they appear close to each other in the actual video. In that case, we can go for an alternative approach wherein the frame numbers are output according to a simple implementation of any multi-output regressor \cite{Brownlee2020}. Since there could be inherent inaccuracies in the training of the same, we can use a spreading factor $\delta$ which shall extract keyframes starting from ${f}_{k} - \Delta$ to ${f}_{k} + \Delta$ instead of just the frame $f_k$.
 
 \subsection{Usability}
 
 Currently, a two-part deployment and its necessity are deemed to be confusing to many SEBI officers who work in the surveillance department and don’t have any prior programming knowledge. Both these deployments could be integrated into a single native cross-platform desktop app developed either using \href{https://riverbankcomputing.com/software/pyqt/intro}{PyQt} or \href{electronjs.org}{Electron} which shall have an intuitive front end design and the same set of calling scripts as its backend. This shall help concerned officers keep track of ongoing workflows as well as use them when required without interfering with ongoing batch workflows and being aware of the complexity of the ML/DL code behind it.
+
+\subsection{VM workflow} \label{future}
+
+The landing server of SEBI Datalake would soon be modified in a way that it will subscribe to an MRSS feed on the Clipbyte platform wherein any new video once pushed shall automatically trigger a workflow. The VM workflow would be modified accordingly so that it either runs as a \href{https://en.wikipedia.org/wiki/Cron}{cron} job at scheduled intervals or it executes only when a new video is available for processing.
