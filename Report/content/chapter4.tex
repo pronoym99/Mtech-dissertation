@@ -10,6 +10,7 @@ It is seen that even in professional work environments, data scientists rarely h
 We realise that the problems discussed above are as technical as they are humane. All these requirements gave rise to a completely new role of an MLOPs engineer \cite{Odegua2020}
 
 Fortunately, for this project, the deployment of the data models falls within its current scope. All the ML models which would be trained and tested would be loaded onto the proprietary Ezmeral MLOPs platform by HPE. The servers for the same reside alongside the required hardware resources on SEBI’s internal servers. Doing this (without going into the details) would make the entire process streamlined i.e. the process of uploading videos, and training models on new data as soon as it is available and at the same time would decrease the manual work involved while doing so. As soon as the deployment has been completed, whether for all the NEWS shows or even a few of them, the internal server would be able to serve requests from within the organization domain (POST methods with JSON body) and at the same time would be able to abstract all the complex code and scripts running in the background. Following is an illustration of the complete MLOPs lifecycle which is allowed by (or within) the Ezmeral MLOPs platform.
+
 (insert appropriate image here)
 
 \section{A two-part deployment}
@@ -20,7 +21,9 @@ This section deals with the needs of SEBI requiring a two-part deployment and th
 
 The remaining part of the literature survey deals with a proper yet brief study of the very exhaustive HPE Ezmeral official documentation to send these models to production. It should be noted that the Ezmeral platform is quite large and only a small part of it deals with proper MLOPs. An even smaller part concerns the project at hand due to the nature of the license procured by the governing organization (SEBI) i.e., we won’t be looking at complicated use cases involving Kubernetes clusters or anything similar. Only the relevant parts of the study have been mentioned below.
 The entire Ezmeral architecture looks something like this:
+
 (insert image of Ezmeral ml dl solution)
+
 As per the above architecture following are some sequential steps to be followed while deploying a model to production: \cite{Chiang2020}
 
 \begin{enumerate}
