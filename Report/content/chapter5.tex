@@ -94,7 +94,7 @@ Usually, there are no clearly defined testing procedures for such custom project
 
 It would be worthwhile to reason why an OCR engine is not directly used on the extracted frames since it would detect the required text followed by which the programmer is supposed to consolidate it to a usable form. \par
 
-The reason lies in the abilities of EasyOCR as an OCR engine which is both an advantage as well as a disadvantage. It should be known that, unlike Tesseract which uses page segmentation modes \cite{Rosebroc2021} to detect text in an image structurally arranged in specific configurations, EasyOCR doesn’t have any such facility. It directly returns a list of bounding box coordinates, the text detected along with a confidence score across the entire image \cite{Jaided}. Following is an example of what would happen if signboards containing multiple texts are passed to EasyOCR.
+The reason lies in the abilities of EasyOCR as an OCR engine which is both an advantage as well as a disadvantage. It should be known that, unlike Tesseract which uses page segmentation modes \cite{Rosebroc2021} to detect text in an image structurally arranged in specific configurations, EasyOCR doesn’t have any such facility. It directly returns a list of bounding box coordinates, the text detected along with a confidence score across the entire image \cite{Jaided}. The above is an illustration of what might happen if numerous texts were provided to EasyOCR on a signboard.
 
 \begin{figure}[h]
   \centering

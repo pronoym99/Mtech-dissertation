@@ -75,7 +75,7 @@ We shall elaborate on the last point a little further. Execution of the scoring 
 
 \textbf{Step 1}: Open a connection with the remote SEBI Datalake server. Exit the program if a timeout error occurs with an appropriate exit code. \\[5mm]
 \textbf{Step 2}: Fetch the next video file in sequence from the remote server. \\[5mm]
-\textbf{Step 3}: Run the Python scoring script on the same. This will lead to the production of a log file. And a CSV file only if the execution is successful. \\[5mm]
+\textbf{Step 3}: Run the Python scoring script on the same. A log file will be created as a result of this. And a CSV file only if the execution is successful. \\[5mm]
 \textbf{Step 4}: Delete the video file. \\[5mm]
 \textbf{Step 5}: Send a copy of the log file to the server and delete its instance from the VM. \\[5mm]
 \textbf{Step 6}: If \textbf{Step 3} was successful, send a copy of the generated CSV file to the remote server and delete its instance from the VM.
