@@ -55,7 +55,7 @@ The amount of video data (primarily intended for bulk processing) amounts to rou
   \hline
   Average frames in consideration per video & $1291$                   \\
   \hline
-  Total size of dataset & $5000$                   \\
+  Total size of the dataset & $5000$                   \\
   \hline
  \end{tabular}
  \label{tab:vid_data_tab}
@@ -66,9 +66,9 @@ The amount of video data (primarily intended for bulk processing) amounts to rou
 As would be obvious from the above table, the reason for mentioning FPS rates and the average total number of frames available after filtering at the FPS rate is because only these frames would be available for the creation of a dataset as mentioned in the next section. Hence filtering is done @ $25$ FPS to obtain only $25$\textsuperscript{th} of the frames available originally. How much of these would be leading to the actual training and testing data is described in the following sections. \par
 
 \subsection{Annotation}
-This single-handedly is the biggest challenge in the entire project. Irrespective of the version of the YoLo framework being used, a large part of the efforts are concentrated on the creation of massive annotated datasets. The typical annotation involves marking out appropriate bounding boxes on regions of interest i.e. ROIs (as would be described in the subsequent sections) and labelling them appropriately in video frames. A typical broadcast which could be as small as $10$ mins. will lead to as many as $3000$ video frames which only after filtering as mentioned in the previous section need to be marked appropriately. This is a laborious task that has been simplified to some extent by the availability of readymade software like \href{https://roboflow.com/annotate}{Roboflow} \cite{rb2022}. \par
+This single-handedly is the biggest challenge in the entire project. Irrespective of the version of the YoLo framework being used, a large part of the efforts are concentrated on the creation of massive annotated datasets. The typical annotation involves marking out appropriate bounding boxes on regions of interest i.e. ROIs (as would be described in the subsequent sections) and labelling them appropriately in video frames. A typical broadcast could be as small as $10$ mins. will lead to as many as $3000$ video frames which only after filtering as mentioned in the previous section need to be marked appropriately. This is a laborious task that has been simplified to some extent by the availability of readymade software like \href{https://roboflow.com/annotate}{Roboflow} \cite{rb2022}. \par
 
-However, as told previously in the section \ref{mod_guides}, our dataset should be varied enough to develop or train a model which is robust to a variety of situations that could be encountered while parsing (a) frame(s) of a video from any NEWS show. Typical edge cases which must be looked at are enumerated below.
+However, as told previously in section \ref{mod_guides}, our dataset should be varied enough to develop or train a model which is robust to a variety of situations that could be encountered while parsing (a) frame(s) of a video from any NEWS show. Typical edge cases which must be looked at are enumerated below.
 \begin{enumerate}
  \item In NEWS show broadcasts, it is common to have minor transitions between subsequent frames, this leads to intermediate blurring and de-blurring of important regions of interest. Our model should be in a position to identify them.
  \item The recommendations being given are available in a variety of formats with a variety of spatial arrangements. All should be annotated but should be labelled with the \textbf{same class}.
@@ -84,14 +84,14 @@ Following is an illustration of the annotation section of the Roboflow software.
 \end{figure}
 
 \subsection{Data preparation for training and testing} \label{train_test}
-Now we are going to boil down to the exact numbers involved in the training and testing dataset which would be summarised below. But before that, it should be noted from the table \ref{tab:vid_data_tab}, that the total images in the dataset are selected as $5000$. We can now write down a generic formula for the proportion of frames being taken from a video for annotation. Let $f_i$ be the number of frames obtained from the $i$\textsuperscript{th} video after filtering at the FPS rate and let $N$ be the total number of frames obtained across all videos in the dataset after filtering @ FPS rate i.e. $N = \sum f_{i}$. Then the proportion of its frames in the final dataset would be $\boldsymbol{F_{i} = \frac{f_{i}}{N}}$. \par
+Now we are going to boil down to the exact numbers involved in the training and testing dataset which would be summarised below. But before that, it should be noted from table \ref{tab:vid_data_tab}, that the total images in the dataset are selected as $5000$. We can now write down a generic formula for the proportion of frames being taken from a video for annotation. Let $f_i$ be the number of frames obtained from the $i$\textsuperscript{th} video after filtering at the FPS rate and let $N$ be the total number of frames obtained across all videos in the dataset after filtering @ FPS rate i.e. $N = \sum f_{i}$. Then the proportion of its frames in the final dataset would be $\boldsymbol{F_{i} = \frac{f_{i}}{N}}$. \par
 
 Apart from that, to adhere to the guidelines given in section \ref{mod_guides} and the edge cases described in the previous section, we need to generate a version of the dataset with each image going through a couple of additional processing steps. Such types of operations substantially increase model performance as well as drastically decrease inferencing times \cite{Joseph2021} \cite{Dwyer2020}. The operations are further divided into two parts namely \textbf{pre-processing} and \textbf{augmentation}.  The image pre-processing operations used are \textit{Resize} and \textit{Filter null}. The augmentation operations which were used are all bounding box augmentations such as \textit{crop}, \textit{blur}, \textit{brightness}, \textit{exposure} and \textit{noise}. Following is the final summary of our dataset for training and testing for a single NEWS show about its analysis as detailed in section \ref{yv4}.
 
 \begin{table}[h]
  \def\arraystretch{1.5}
  \centering
- \caption{Summary of training dataset from Midcap Bazaar. Note: the no. of negative frames being much lesser than positive frames}
+ \caption{Summary of training dataset from Midcap Bazaar. Note: the no. of negative frames is much lesser than positive frames}
  \begin{tabular}{|c|c|}
   \hline
   Parameter & Value and unit \\
@@ -143,7 +143,7 @@ It should be noted that the mere usage of the YoLov3 framework didn’t give a s
   \draw [arrow] (yolov3) -- (rf);
   \draw [arrow] (rf) -- (output);
  \end{tikzpicture}
- \caption{A flowchart representation of the two different approaches: with and wihtout random forest classifiers}
+ \caption{A flowchart representation of the two different approaches: with and without random forest classifiers}
  \label{fig:not_rf_and_rf}
 \end{figure}
 
@@ -157,7 +157,7 @@ Now a reference list is used which has the analyst names inside it and correspon
 The overall classifier model would simply take in a list of $784$ pixels obtained from an image that has been passed through a threshold value of $100$.
 
 \subsubsection{Python script methodology}
-The actual python script being long can only be described in brief. Important ROIs are targeted for different NEWS shows. Frames obtained are trimmed off at these specific coordinates. Then all these ROIs are passed into a total of $12$ different image pre-processing operations simultaneously. All of them are then passed into the concerned OCR frameworks to obtain the corresponding text inside them. The text which doesn’t go into the ML models is compared against existing NSE listings to figure out the correct company name using string matching algorithms (matching set at particular thresholds). Then the final output obtained is summarized into a proper CSV format and displayed to the end-user.
+The actual python script being long can only be described in brief. Important ROIs are targeted for different NEWS shows. Frames obtained are trimmed off at these specific coordinates. Then all these ROIs are passed into a total of $12$ different image pre-processing operations simultaneously. All of them are then passed into the concerned OCR frameworks to obtain the corresponding text inside them. The text which doesn’t go into the ML models are compared against existing NSE listings to figure out the correct company name using string matching algorithms (matching set at particular thresholds). Then the final output obtained is summarized into a proper CSV format and displayed to the end-user.
 
 \begin{figure}[h]
   \centering
@@ -168,7 +168,7 @@ The actual python script being long can only be described in brief. Important RO
 
 \subsection{YoLov4} \label{yv4}
 
-After the complete training of the dataset as described in the section \ref{train_test} is concluded, the execution of the {\fontfamily{qcr}\selectfont darknet.exe} command or the calling of a high-level library on a particular frame produces bounding boxes with appropriate coordinates, the class detected and the confidence score associated with each detection. There could be multiple detections in a frame, all of which would be returned. We may choose to somehow aggregate the confidence scores at the end to show an overall value of the percentage accuracy but it is completely optional. The important part of this process is \textbf{bounding box coordinates} which are obtained at the end. These would be sent into the OCR engine described in the next section.
+After the complete training of the dataset as described in section \ref{train_test} is concluded, the execution of the {\fontfamily{qcr}\selectfont darknet.exe} command or the calling of a high-level library on a particular frame produces bounding boxes with appropriate coordinates, the class detected and the confidence score associated with each detection. There could be multiple detections in a frame, all of which would be returned. We may choose to somehow aggregate the confidence scores at the end to show an overall value of the percentage accuracy but it is completely optional. The important part of this process is \textbf{bounding box coordinates} which are obtained at the end. These would be sent into the OCR engine described in the next section.
 
 \subsection{OCR models}
 
@@ -189,7 +189,7 @@ This concludes the typical program flow for such a script. The following section
 
 \subsubsection{Multiple recommendations in a frame}
 
-Although we have not gone into the details of how the dataset on which the training is carried out in section \ref{train_test} looks like. It is known that there exist rare situations wherein multiple recommendations corresponding to distinct company shares are given in the same frame. In such cases, it is difficult to associate recommendations and other numerical values accurately with a company or its listing symbol. I have proposed a method below which is simple to follow and leads to substantial accuracy in such cases. \par
+Although we have not gone into the details of what the dataset on which the training is carried out in section \ref{train_test} looks like. It is known that there exist rare situations wherein multiple recommendations corresponding to distinct company shares are given in the same frame. In such cases, it is difficult to associate recommendations and other numerical values accurately with a company or its listing symbol. I have proposed a method below which is simple to follow and leads to substantial accuracy in such cases. \par
 
 We are well aware that the multiple bounding boxes that are being returned by the YoLov4 model all lie along the same vertical axis. The only discerning feature is the limits of the bounding boxes along the $X$ - axis. Let $X_i$ and $X_j$ be the $X$ - axis limits for a detection containing a company name or its symbol. Let $x_i$ and $x_j$ be the $X$ - axis limits for a detection containing any of the following values: recommendation, target price, stop loss etc. The latter can be associated with the former if and only if either or both of the $X$ - axis limits of the latter are contained within the former. Precisely, the latter can be associated with the former if $x_{i} \geqslant X_{i}$ and (or)  $x_{j} \leqslant X_{j}$. It is driven by the reason that the latter is usually placed below the former in any NEWS show but with identical text size and width. \par
 

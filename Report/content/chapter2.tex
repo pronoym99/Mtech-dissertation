@@ -23,7 +23,7 @@ Following is the output when a high-level library like \href{https://pypi.org/pr
 \begin{center}
 \begin{subfigure}{0.7\textwidth}
   \includegraphics[width=\linewidth, height=5cm]{chapter2/person.jpeg}
-  \caption{A sample image taken from the original Darknet \href{https://github.com/AlexeyAB/darknet}{github repository}}
+  \caption{A sample image taken from the original Darknet \href{https://github.com/AlexeyAB/darknet}{GitHub repository}}
   \label{fig:person_sub1}
  \end{subfigure} \\
  \begin{subfigure}{0.7\textwidth}
@@ -159,7 +159,7 @@ In any large neural network-based architecture, it is common for the last and th
 \subsubsection{Self-Adversarial Training (SAT)}
 Deep learning is very much susceptible to \textit{adversarial data} so YoLov4 uses SAT to introduce precise amounts of perturbation in the data such that the predicted label stays the same as the original label. This helps it easily achieve good accuracies for even augmentations of simple images.
 
-All these discussions prove the benefits and advantages of YoLov4 over YoLov3 and hence it's choice for the project. As always, all things are better quantified in a graph of mAP versus execution time as shown below.
+All these discussions prove the benefits and advantages of YoLov4 over YoLov3 and hence it is the choice for the project. As always, all things are better quantified in a graph of mAP versus execution time as shown below.
 
 \begin{figure}[h]
   \centering
@@ -171,7 +171,7 @@ All these discussions prove the benefits and advantages of YoLov4 over YoLov3 an
 
 \section{Performance metrics for evaluating object detection models \cite{Koech2020}}  \label{metrics}
 
-The entirety of this report deals with a large number of performance metrics used to evaluate a variety of ML/DL models. Some are popular and have been used to evaluate such models for a long time while some metrics are empirical in nature because their output is a combination of a variety of models dealing with different classes of inputs and outputs which are working together. However, we would be specifically discussing metrics used for the evaluation of the performance of object detection models in this section.
+The entirety of this report deals with a large number of performance metrics used to evaluate a variety of ML/DL models. Some are popular and have been used to evaluate such models for a long time while some metrics are empirical because their output is a combination of a variety of models dealing with different classes of inputs and outputs which are working together. However, we would be specifically discussing metrics used for the evaluation of the performance of object detection models in this section.
 \subsection{Intersection over Union (IoU)}
 This metric equals the amount of overlap between the ground truth denoted by $g_t$ and the predicted value by a particular model i.e. prediction denoted by $p_d$. It is to be noted that since this value is a ratio, it is a fraction consisting of numerator and denominator areas in appropriate units. Mathematically, it is given by
 \begin{equation}
@@ -221,7 +221,7 @@ The following rules for a good project using YoLo are mere \textit{thumb – rul
 \subsection{For training}
 
 \begin{enumerate}
-  \item The values of {\fontfamily{qcr}\selectfont random} should be set to $1$ in your  {\fontfamily{qcr}\selectfont .cfg} file which allows training for multiple image or video resolutions simultaneously.
+  \item The values of {\fontfamily{qcr}\selectfont random} should be set to $1$ in your  {\fontfamily{qcr}\selectfont .cfg} file which allows training for multiple images or video resolutions simultaneously.
   \item Every distinct object that is liable for detection must have an appropriate label in the dataset.
   \item Precision may be increased by keeping the height and width of images or video frames as a multiple of $32$.
   \item The training dataset should be such that every object to be detected corresponds to an exactly similar object in the training dataset. Similarity should be in terms of size, no. of classes to be detected ($c$), overall spatial orientation, overall illumination, augmentation (if any) etc. \par
