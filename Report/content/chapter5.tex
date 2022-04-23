@@ -1,6 +1,6 @@
 \chapter{Results and discussions} \label{chapter5}
 
-The following subsections shall discuss in detail, a variety of important comparisons which affect the project work, a brief overview of the methodologies learned, deviations from the ideal case (if any) and a creator’s road map for implementation of a similar project and other moderately or less important details. It also has a section for the work which is being currently done at SEBI to improve the existing system. The initial two sections deal with metrics of accuracy and execution time across two different bases for comparison while the section that follows discusses why the metrics are chosen and defined as they are. \par
+The following subsections shall discuss in detail, a variety of important comparisons which affect the project work, a brief overview of the methodologies learned, deviations from the ideal case (if any) and a creator’s road map for implementation of a similar project and other moderate and small details. It also has a section for the work which is being currently done at SEBI to improve the existing system. The initial two sections deal with metrics of accuracy and execution time across two different bases for comparison while the section that follows discusses why the metrics are chosen and defined as they are. \par
 
 \section{Comparison between OCR models} \label{comp_ocr}
 
@@ -32,7 +32,7 @@ Still, EasyOCR (and the project) benefits even further from a possible change in
 
 It is a known fact that almost all deep learning systems (inclusive of computer vision models) benefit greatly from the presence of GPUs in the development environment. Although as of now the Ezmeral cluster doesn’t have GPU access, testing was still performed on a local workstation with an \href{ https://www.nvidia.com/en-in/geforce/20-series/}{RTX 2060} graphics card with the equivalent Nvidia \href{https://developer.nvidia.com/cuda-toolkit}{CUDA toolkit} installed. \par
 
-It should be noted that \textbf{no execution environment} discussed earlier in chapter \ref{chapter4} had any mention of GPUs so there was a decrease in execution time by a large margin for the same test video. The decrease of roughly by a factor of $4.5$ w.r.t. to the closest competitor i.e. for execution recorded on a standalone VM. The reason for this was obvious: the documentation of EasyOCR mentions that their pipeline is more performant in the presence of a GPU \cite{Jaided}. Following are the results summarised in the form of a bar chart.
+It should be noted that \textbf{no execution environment} discussed earlier in chapter \ref{chapter4} had any mention of GPUs so there was a decrease in execution time by a large margin for the same test video. The decrease of roughly by a factor of $4.5$ w.r.t. to the closest competitor i.e. for execution recorded on a standalone VM. The reason for this was obvious: the documentation of EasyOCR mentions that their pipeline is more performant in the presence of a GPU \cite{Jaided}. The results are summarised in the form of a bar chart below.
 
 \begin{figure}[h]
   \centering
