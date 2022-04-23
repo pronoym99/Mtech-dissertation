@@ -218,7 +218,7 @@ mAP@\alpha = \frac{1}{n} \sum_{i=1}^{n} AP_{i}
 \section{Guidelines for a good YoLo project} \label{mod_guides}
 The following rules for a good project using YoLo are mere \textit{thumb – rules} and are not some strict guidelines to be followed and should be evaluated on a case to case basis for every project. Additionally, it should be noted that such rules may not be applicable for implementation in every object detection project. The following rules are bifurcated into those undertaken during the training and those in the testing (detection) phase.
 
-\subsection{For training}
+\subsection{For training} \label{for_train_guide}
 
 \begin{enumerate}
   \item The values of {\fontfamily{qcr}\selectfont random} should be set to $1$ in your  {\fontfamily{qcr}\selectfont .cfg} file which allows training for multiple images or video resolutions simultaneously.
@@ -235,7 +235,7 @@ The following rules for a good project using YoLo are mere \textit{thumb – rul
 \subsection{For testing or detection}
 
 \begin{enumerate}
-  \item Increase network resolution in the same way as mentioned in 1. c.
+  \item Increase network resolution in the same way as mentioned in section \ref{for_train_guide} c.
   \item It should be noted that retraining is not required in the event of loss in your dataset or any other unintended corruption. Only the \textit{darknet} command should be available which can be used to perform detections using the pre-trained {\fontfamily{qcr}\selectfont .weights} file which was trained on the $416 \times 416$ resolution images.
   \item To further enhance the accuracy, dataset training must proceed onto higher multiples of  $32$ such as $608 \times 608$ or $832 \times 832$. In the event of a memory overflow ({\fontfamily{qcr}\selectfont Out of memory}), {\fontfamily{qcr}\selectfont subdivisions} in your {\fontfamily{qcr}\selectfont .cfg} file must be increased from $16$ to $32$ to $64$ and so on.
 \end{enumerate}
