@@ -10,55 +10,55 @@ The entirety of the video data was procured from a company called \href{clipbyte
 SEBI gave the contract to Clipbyte for providing videos of NEWS shows across a span of one and a half years and a total of $7$ NEWS shows. A summary of the entire data made available to SEBI at an undisclosed contract amount is enlisted below.
 
 \begin{table}[h]
- \def\arraystretch{1.5}
- \centering
- \caption{Summary of videos available}
- \begin{tabular}{|c|c|}
-  \hline
-  NEWS show & Approximate no.\\
-  \hline
-  Buy Now Sell Now & $435$                   \\
-  \hline
-  Pehla Sauda & $435$                   \\
-  \hline
-  NSE Closing Bell & $435$                   \\
-  \hline
-  Bazaar Morning Call & $435$                   \\
-  \hline
-  Midcap Bazaar & $435$                 \\
-  \hline
-  Stock 20-20 & $326$                \\
-  \hline
-  Weekly Roundup & $37$              \\
-  \hline
- \end{tabular}
- \label{tab:news_shows_acquired}
+  \def\arraystretch{1.5}
+  \centering
+  \caption{Summary of videos available}
+  \begin{tabular}{|c|c|}
+    \hline
+    NEWS show           & Approximate no. \\
+    \hline
+    Buy Now Sell Now    & $435$           \\
+    \hline
+    Pehla Sauda         & $435$           \\
+    \hline
+    NSE Closing Bell    & $435$           \\
+    \hline
+    Bazaar Morning Call & $435$           \\
+    \hline
+    Midcap Bazaar       & $435$           \\
+    \hline
+    Stock 20-20         & $326$           \\
+    \hline
+    Weekly Roundup      & $37$            \\
+    \hline
+  \end{tabular}
+  \label{tab:news_shows_acquired}
 \end{table}
 
 The amount of video data (primarily intended for bulk processing) amounts to roughly $1.08$ Tb in size and roughly $2137$ videos ranging from as small as $250$ Mb to videos of special broadcasts amounting to excess of $900$ Mb. The data was first loaded onto an intermediate server and then finally onto the state of the art SEBI Datalake server which is essentially a cloud platform. Later, the videos are fetched as required from the Datalake server itself for further processing. The current analysis is being done from scratch on the NEWS show Midcap Bazaar from the channel ZEE NEWS using sophisticated YoLov4 models and appropriate OCR engines. The data available only from this show is shown at a glance in the following table. The data available from other NEWS shows have a similar scale although they have not been shown here for convenience.
 
 \begin{table}[h]
- \def\arraystretch{1.5}
- \centering
- \caption{Summary of video frames from Midcap Bazaar}
- \begin{tabular}{|c|c|}
-  \hline
-  Parameter & Number\\
-  \hline
-  Total videos & $266$                   \\
-  \hline
-  Total frames & $8584623$                   \\
-  \hline
-  Average frames per video & $32273$                   \\
-  \hline
-  Total frames in consideration @ FPS rate & $343371$                   \\
-  \hline
-  Average frames in consideration per video & $1291$                   \\
-  \hline
-  Total size of the dataset & $5000$                   \\
-  \hline
- \end{tabular}
- \label{tab:vid_data_tab}
+  \def\arraystretch{1.5}
+  \centering
+  \caption{Summary of video frames from Midcap Bazaar}
+  \begin{tabular}{|c|c|}
+    \hline
+    Parameter                                 & Number    \\
+    \hline
+    Total videos                              & $266$     \\
+    \hline
+    Total frames                              & $8584623$ \\
+    \hline
+    Average frames per video                  & $32273$   \\
+    \hline
+    Total frames in consideration @ FPS rate  & $343371$  \\
+    \hline
+    Average frames in consideration per video & $1291$    \\
+    \hline
+    Total size of the dataset                 & $5000$    \\
+    \hline
+  \end{tabular}
+  \label{tab:vid_data_tab}
 \end{table}
 
 \section{Data annotation and preparation}
@@ -70,9 +70,9 @@ This single-handedly is the biggest challenge in the entire project. Irrespectiv
 
 However, as told previously in section \ref{mod_guides}, our dataset should be varied enough to develop or train a model which is robust to a variety of situations that could be encountered while parsing (a) frame(s) of a video from any NEWS show. Typical edge cases which must be looked at are enumerated below.
 \begin{enumerate}
- \item In NEWS show broadcasts, it is common to have minor transitions between subsequent frames, this leads to intermediate blurring and de-blurring of important regions of interest. Our model should be in a position to identify them.
- \item The recommendations being given are available in a variety of formats with a variety of spatial arrangements. All should be annotated but should be labelled with the \textbf{same class}.
- \item Sometimes ROIs appear in the same way excepting their overall scale, they should be detected exactly in the same way as if it was their original size or scale.
+  \item In NEWS show broadcasts, it is common to have minor transitions between subsequent frames, this leads to intermediate blurring and de-blurring of important regions of interest. Our model should be in a position to identify them.
+  \item The recommendations being given are available in a variety of formats with a variety of spatial arrangements. All should be annotated but should be labelled with the \textbf{same class}.
+  \item Sometimes ROIs appear in the same way excepting their overall scale, they should be detected exactly in the same way as if it was their original size or scale.
 \end{enumerate}
 Following is an illustration of the annotation section of the Roboflow software.
 
@@ -89,27 +89,27 @@ Now we are going to boil down to the exact numbers involved in the training and 
 Apart from that, to adhere to the guidelines given in section \ref{mod_guides} and the edge cases described in the previous section, we need to generate a version of the dataset with each image going through a couple of additional processing steps. Such types of operations substantially increase model performance as well as drastically decrease inferencing times \cite{Joseph2021} \cite{Dwyer2020}. The operations are further divided into two parts namely \textbf{pre-processing} and \textbf{augmentation}.  The image pre-processing operations used are \textit{Resize} and \textit{Filter null}. The augmentation operations which were used are all bounding box augmentations such as \textit{crop}, \textit{blur}, \textit{brightness}, \textit{exposure} and \textit{noise}. Following is the final summary of our dataset for training and testing for a single NEWS show about its analysis as detailed in section \ref{yv4}.
 
 \begin{table}[h]
- \def\arraystretch{1.5}
- \centering
- \caption{Summary of training dataset from Midcap Bazaar. Note: the no. of negative frames is much lesser than positive frames}
- \begin{tabular}{|c|c|}
-  \hline
-  Parameter & Value and unit \\
-  \hline
-  Frame size & $768 \times 576$                    \\
-  \hline
-  Training & $3500$ videos                   \\
-  \hline
-  Validation & $1000$ videos                 \\
-  \hline
-  Testing & $500$ videos                   \\
-  \hline
-  Positive frames (upto $7$ months) & $2566$                   \\
-  \hline
-  Negative frames (upto $7$ months) & $382$                   \\
-  \hline
- \end{tabular}
- \label{tab:vid_train}
+  \def\arraystretch{1.5}
+  \centering
+  \caption{Summary of training dataset from Midcap Bazaar. Note: the no. of negative frames is much lesser than positive frames}
+  \begin{tabular}{|c|c|}
+    \hline
+    Parameter                         & Value and unit   \\
+    \hline
+    Frame size                        & $768 \times 576$ \\
+    \hline
+    Training                          & $3500$ videos    \\
+    \hline
+    Validation                        & $1000$ videos    \\
+    \hline
+    Testing                           & $500$ videos     \\
+    \hline
+    Positive frames (upto $7$ months) & $2566$           \\
+    \hline
+    Negative frames (upto $7$ months) & $382$            \\
+    \hline
+  \end{tabular}
+  \label{tab:vid_train}
 \end{table}
 
 This software along with giving the capabilities to annotate a variety of subjects (pictures, videos, text etc.) produces the required weights file for the Yolo framework of any version (one through five). This when combined with the appropriate {\fontfamily{qcr}\selectfont \textbf{config}} file (a file containing the complete neural network-based configuration for the YoLo framework) is almost ready for compilation i.e. training and testing. One more additional file i.e. either a {\fontfamily{qcr}\selectfont \textbf{.data}} and/or {\fontfamily{qcr}\selectfont \textbf{names.list}} file would be required which would specify the names of the classes into which classification is supposed to occur. \par
@@ -125,26 +125,26 @@ This is the \textbf{\textit{heart and soul}} of the entire project. The methodol
 It should be noted that the mere usage of the YoLov3 framework didn’t give a substantial number of accurate results so the training dataset was enhanced using \textbf{random forest classifiers} to obtain a substantial increase in percentage accuracy. The logic behind this is better illustrated through the following two flowcharts.
 
 \begin{figure}[h]
- \centering
- \begin{tikzpicture}[node distance=2cm]
-  \node (input) [io] {Image data};
-  \node (yolov3) [process, right of=input, xshift=2cm] {YoLov3 models};
-  \node (output) [io, right of=yolov3, xshift=3cm] {Moderate accuracy};
-  \draw [arrow] (input) -- (yolov3);
-  \draw [arrow] (yolov3) -- (output);
- \end{tikzpicture} \\
- \vspace{1.5cm}
- \begin{tikzpicture}[node distance=2cm]
-  \node (input) [io] {Image data};
-  \node (yolov3) [process, right of=input, xshift=2cm] {YoLov3 models};
-  \node (rf) [process, right of=yolov3, xshift=2cm] {RF classifier};
-  \node (output) [io, right of=rf, xshift=3cm] {High accuracy};
-  \draw [arrow] (input) -- (yolov3);
-  \draw [arrow] (yolov3) -- (rf);
-  \draw [arrow] (rf) -- (output);
- \end{tikzpicture}
- \caption{A flowchart representation of the two different approaches: with and without random forest classifiers}
- \label{fig:not_rf_and_rf}
+  \centering
+  \begin{tikzpicture}[node distance=2cm]
+    \node (input) [io] {Image data};
+    \node (yolov3) [process, right of=input, xshift=2cm] {YoLov3 models};
+    \node (output) [io, right of=yolov3, xshift=3cm] {Moderate accuracy};
+    \draw [arrow] (input) -- (yolov3);
+    \draw [arrow] (yolov3) -- (output);
+  \end{tikzpicture} \\
+  \vspace{1.5cm}
+  \begin{tikzpicture}[node distance=2cm]
+    \node (input) [io] {Image data};
+    \node (yolov3) [process, right of=input, xshift=2cm] {YoLov3 models};
+    \node (rf) [process, right of=yolov3, xshift=2cm] {RF classifier};
+    \node (output) [io, right of=rf, xshift=3cm] {High accuracy};
+    \draw [arrow] (input) -- (yolov3);
+    \draw [arrow] (yolov3) -- (rf);
+    \draw [arrow] (rf) -- (output);
+  \end{tikzpicture}
+  \caption{A flowchart representation of the two different approaches: with and without random forest classifiers}
+  \label{fig:not_rf_and_rf}
 \end{figure}
 
 This section has been bifurcated into two parts, the first dealing with the dataset on which the classifier was trained and the second dealing with how the actual Python script works.

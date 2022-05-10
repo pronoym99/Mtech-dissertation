@@ -11,9 +11,9 @@ EasyOCR offers as many capabilities \cite{Jaided2020} as Tesseract (\textit{sans
 It should be noted that EasyOCR is a ready-to-use OCR that is invariant to colour images while the Tesseract documentation does say things about providing a greyscale image as input. This feature alone avoided a lot of extra image processing operations within the codebase. After using EasyOCR, the following changes took place:
 
 \begin{itemize}
- \item The size of the codebase was greatly reduced (from $1400$ lines to less than $1000$ lines).
- \item The execution time dropped significantly (from $73$ to $14$ minutes: a reduction of $\approx 80\%$ on similar environments).
- \item Major improvements were not visible in accuracy although EasyOCR still managed to perform better ($A_{e} = 0.94375$ and $A_{e} = 0.95$ respectively).
+  \item The size of the codebase was greatly reduced (from $1400$ lines to less than $1000$ lines).
+  \item The execution time dropped significantly (from $73$ to $14$ minutes: a reduction of $\approx 80\%$ on similar environments).
+  \item Major improvements were not visible in accuracy although EasyOCR still managed to perform better ($A_{e} = 0.94375$ and $A_{e} = 0.95$ respectively).
 \end{itemize}
 
 Amongst all decoded values at the end of a particular run, the following results were obtained and are summarised below.
@@ -50,29 +50,29 @@ As stated in earlier chapters, the work at hand is to process a total of $7$ NEW
 The following table lists the shows on one side and the percentage of total videos of each show that has been processed.
 
 \begin{table}[h]
- \def\arraystretch{1.5}
- \centering
- \caption{Batch workflow progress}
- \begin{tabular}{|c|c|}
-  \hline
-  NEWS show & Progress (in \%)\\
-  \hline
-  Buy Now Sell Now & $10$                   \\
-  \hline
-  Pehla Sauda & $25$                   \\
-  \hline
-  NSE Closing Bell & $10$                   \\
-  \hline
-  Bazaar Morning Call & $10$                   \\
-  \hline
-  Midcap Bazaar & $35$                 \\
-  \hline
-  Stock 20-20 & $100$                \\
-  \hline
-  Weekly Roundup & \textbf{Omitted}               \\
-  \hline
- \end{tabular}
- \label{tab:news_prog}
+  \def\arraystretch{1.5}
+  \centering
+  \caption{Batch workflow progress}
+  \begin{tabular}{|c|c|}
+    \hline
+    NEWS show           & Progress (in \%) \\
+    \hline
+    Buy Now Sell Now    & $10$             \\
+    \hline
+    Pehla Sauda         & $25$             \\
+    \hline
+    NSE Closing Bell    & $10$             \\
+    \hline
+    Bazaar Morning Call & $10$             \\
+    \hline
+    Midcap Bazaar       & $35$             \\
+    \hline
+    Stock 20-20         & $100$            \\
+    \hline
+    Weekly Roundup      & \textbf{Omitted} \\
+    \hline
+  \end{tabular}
+  \label{tab:news_prog}
 \end{table}
 
 
@@ -82,9 +82,9 @@ Usually, there are no clearly defined testing procedures for such custom project
 
 \begin{enumerate}
 
- \item Batch processing workflows involve a very large number of videos at once, stopping them in between drastically decreases the efficiency of such workflows and the more important reason being
+  \item Batch processing workflows involve a very large number of videos at once, stopping them in between drastically decreases the efficiency of such workflows and the more important reason being
 
- \item Anomaly detection systems or models which follow this project already employ sufficient data cleaning procedures to obtain a reliable and usable output within tolerable error limits.
+  \item Anomaly detection systems or models which follow this project already employ sufficient data cleaning procedures to obtain a reliable and usable output within tolerable error limits.
 
 \end{enumerate}
 
@@ -112,9 +112,9 @@ We would realise that all texts scattered throughout the image are returned, how
 
 It has been clearly stated in section \ref{vid_data} that the entirety of the video data was obtained from \href{clipbyte.com}{Clipbyte}. It would be worthwhile to argue that all videos could be directly downloaded from a platform like \href{youtube.com}{YouTube}. However, there are two major reasons for not doing so:
 \begin{enumerate}
- \item All broadcasts of the concerned NEWS shows are not available on such video platforms and nor do the respective channels upload videos in a timed and orderly manner.
+  \item All broadcasts of the concerned NEWS shows are not available on such video platforms and nor do the respective channels upload videos in a timed and orderly manner.
 
- \item There is no official way to download videos from such a platform so availing videos from such a platform by a Government regulatory body would imply improper means of accessing publicly available information in the situation wherein the InVestigations Department (IVD) of SEBI has to file a case against a suspected entity. The data source needs to be mentioned in the case file and hence a separate contractor has been tended for this job.
+  \item There is no official way to download videos from such a platform so availing videos from such a platform by a Government regulatory body would imply improper means of accessing publicly available information in the situation wherein the InVestigations Department (IVD) of SEBI has to file a case against a suspected entity. The data source needs to be mentioned in the case file and hence a separate contractor has been tended for this job.
 
 \end{enumerate}
 
@@ -129,8 +129,8 @@ A simple e.g. being that the YoLo models discussed throughout the report output 
 Each of these models named above has its own set of accuracy metrics which may be discussed however, they would be irrelevant to the final output of the project. Hence, we have stuck to the concept of simple empirical accuracy which is defined by the set of values obtained at the end from the OCR and summarised in the CSV file and is defined as follows
 
 \begin{equation}
-\centering
-A_{e} = 1 - \frac{No. \ of  \ NA \ values \ in \ the \ CSV}{Total \ no. \ of \ values \ in \ the \ CSV }
+  \centering
+  A_{e} = 1 - \frac{No. \ of  \ NA \ values \ in \ the \ CSV}{Total \ no. \ of \ values \ in \ the \ CSV }
 \end{equation}
 
 \textit{Measuring execution time remains the same i.e. in seconds although at a couple of places wherein the execution time is large, seconds have been replaced by larger units of time}. \newpage

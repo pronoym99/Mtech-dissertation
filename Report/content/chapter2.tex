@@ -9,9 +9,9 @@ The neural network for YoLo along with its entire compilation system is known as
 
 \begin{itemize}
   \item The detected classes of objects (e.g. horse, car etc.)
-  \item	The prediction confidence (e.g. $0.91$, $0.86$ etc.) and
-  \item	The time it took to carry out the prediction or detection (e.g. $6$s, $12$s etc.)
-  \item	Sophisticated high-level libraries will also produce the bounding boxes corresponding to each
+  \item The prediction confidence (e.g. $0.91$, $0.86$ etc.) and
+  \item The time it took to carry out the prediction or detection (e.g. $6$s, $12$s etc.)
+  \item Sophisticated high-level libraries will also produce the bounding boxes corresponding to each
 \end{itemize}
 
 \vspace{-0.1in}
@@ -20,27 +20,27 @@ Following is the output when a high-level library like \href{https://pypi.org/pr
 
 \begin{figure}[h]
 
-\begin{center}
-\begin{subfigure}{0.7\textwidth}
-  \includegraphics[width=\linewidth, height=5cm]{chapter2/person.jpeg}
-  \caption{A sample image taken from the original Darknet \href{https://github.com/AlexeyAB/darknet}{GitHub repository}}
-  \label{fig:person_sub1}
- \end{subfigure} \\
- \begin{subfigure}{0.7\textwidth}
-  \includegraphics[width=\linewidth, height=5cm]{chapter2/personresult.png}
-  \caption{Bounding boxes and detected objects in the image}
-  \label{fig:person_sub2}
-  \end{subfigure} \\
-  \begin{subfigure}{0.7\textwidth}
-   \includegraphics[width=\linewidth, height=5cm]{chapter2/personboxes.png}
-   \caption{The bounding box coordinates obtained}
-   \label{fig:person_sub3}
- \end{subfigure}
+  \begin{center}
+    \begin{subfigure}{0.7\textwidth}
+      \includegraphics[width=\linewidth, height=5cm]{chapter2/person.jpeg}
+      \caption{A sample image taken from the original Darknet \href{https://github.com/AlexeyAB/darknet}{GitHub repository}}
+      \label{fig:person_sub1}
+    \end{subfigure} \\
+    \begin{subfigure}{0.7\textwidth}
+      \includegraphics[width=\linewidth, height=5cm]{chapter2/personresult.png}
+      \caption{Bounding boxes and detected objects in the image}
+      \label{fig:person_sub2}
+    \end{subfigure} \\
+    \begin{subfigure}{0.7\textwidth}
+      \includegraphics[width=\linewidth, height=5cm]{chapter2/personboxes.png}
+      \caption{The bounding box coordinates obtained}
+      \label{fig:person_sub3}
+    \end{subfigure}
 
- \caption{A sample Darknet run on an image}
- \label{fig:person_ref}
+    \caption{A sample Darknet run on an image}
+    \label{fig:person_ref}
 
-\end{center}
+  \end{center}
 
 \end{figure}
 
@@ -54,10 +54,10 @@ YoLov3 is the first version using an objectivity score for the prediction of bou
 \subsubsection{Bounding box prediction}
 Any bounding box in a prediction is represented by a set of four parameters namely $t_x$ and $t_y$: coordinates of the centre of the bounding box and its width and height represented by $t_w$ and $t_h$ respectively. In the event of the top left corner of the bounding box being displaced by $(c_x,c_y)$ respectively, the following overall changes are calculated in the dimensions (let $p_w$ and $p_h$ be the width and height of the bounding box from the previous iteration).
 \begin{align*}
-b_x &=  \sigma(t_x) + c_x \\
-b_y &=  \sigma(t_y) + c_y \\
-b_w &=  {p_w}e^{t_w} \\
-b_h &=  {p_h}e^{t_h}
+  b_x & =  \sigma(t_x) + c_x \\
+  b_y & =  \sigma(t_y) + c_y \\
+  b_w & =  {p_w}e^{t_w}      \\
+  b_h & =  {p_h}e^{t_h}
 \end{align*}
 Unlike previous systems (or previous YoLo versions), the training phase assigns an \textbf{objectness} score to each bounding box. This score equals one if the current bounding box overlaps a ground truth object to an extent greater than any other previously obtained bounding box. If any previously obtained bounding box doesn’t overlap the ground truth to a greater extent or overlaps only by a certain threshold (say $0.5$ as stated in this paper) then the objectness score is simply zero. Following is a representation of all the important dimensions which are involved in this process.
 
@@ -100,11 +100,11 @@ This is the final stage of the entire framework: a common name for the \textit{o
 As the number of examples in each stage shows, a typical YoLov4 framework can be implemented in any selection of input, backbone, neck and head. When there are such a large number of combinations possible, the best architecture should be an optimal combination of all the sections. This optimal choice would alone make it superior to YoLov3 in terms of \textbf{performance and accuracy}. This optimal combination should be arrived at by looking at the following parameters:
 
 \begin{itemize}
-\item Input resolution of images and their size
-\item Number of convolutional layers
-\item Number of parameters (hyperparameters) to be optimised
-\item Number of output layers or filters
-\item YoLov4 also provides something known as \textit{Bag of Specials} and \textit{Bag of Freebies} which are methods or functions for increasing the respective fields and mappings between backbone levels to detector levels. This gives us another region wherein optimisation can be done.
+  \item Input resolution of images and their size
+  \item Number of convolutional layers
+  \item Number of parameters (hyperparameters) to be optimised
+  \item Number of output layers or filters
+  \item YoLov4 also provides something known as \textit{Bag of Specials} and \textit{Bag of Freebies} which are methods or functions for increasing the respective fields and mappings between backbone levels to detector levels. This gives us another region wherein optimisation can be done.
 
 \end{itemize}
 
@@ -128,21 +128,21 @@ The final architecture that was deemed optimal for YoLov4 is as follows (with ba
 A couple of other combinations were derived but the FPS of the above combination superseded everything else.  A summary of the FPS values of a couple of other possibilities is given below. Now we are going to see some special sections of the architecture (but are not limited to) in detail which make it more efficient than YoLov3.
 
 \begin{table}[h]
- \def\arraystretch{1.5}
- \centering
- \caption{Neural network parameters for image recognition for $512 \times 512$ network resolution}
- \begin{tabular}{|c|c|c|c|c|c|}
-  \hline
-  Backbone model & Receptive field size & Parameters & Average layer size & BFLOPs & FPS\\
-  \hline
-  CSPResNext50 & $425 \times 425$  & $20.6$ mn & $1058$ K & $31$ & $62$                   \\
-  \hline
-  CSPDarknet53 & $725 \times 725$ & $27.6$ mn & $950$ K & $52$ & $66$                        \\
-  \hline
-  EfficientNet & $1311 \times 1311$ & $12$ & $668$ K & $11$ & $26$                        \\
-  \hline
- \end{tabular}
- \label{tab:mccons}
+  \def\arraystretch{1.5}
+  \centering
+  \caption{Neural network parameters for image recognition for $512 \times 512$ network resolution}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    Backbone model & Receptive field size & Parameters & Average layer size & BFLOPs & FPS  \\
+    \hline
+    CSPResNext50   & $425 \times 425$     & $20.6$ mn  & $1058$ K           & $31$   & $62$ \\
+    \hline
+    CSPDarknet53   & $725 \times 725$     & $27.6$ mn  & $950$ K            & $52$   & $66$ \\
+    \hline
+    EfficientNet   & $1311 \times 1311$   & $12$       & $668$ K            & $11$   & $26$ \\
+    \hline
+  \end{tabular}
+  \label{tab:mccons}
 \end{table}
 
 
@@ -151,7 +151,7 @@ In any large neural network-based architecture, it is common for the last and th
 
 \begin{figure}[h]
   \centering
-    \includegraphics[scale=0.5]{chapter2/dense_architectures.png}
+  \includegraphics[scale=0.5]{chapter2/dense_architectures.png}
   \caption{The two possible dense architectures: DenseNet and CSPDensnet}
   \label{fig:dense_arch}
 \end{figure}
@@ -175,32 +175,32 @@ The entirety of this report deals with a large number of performance metrics use
 \subsection{Intersection over Union (IoU)}
 This metric equals the amount of overlap between the ground truth denoted by $g_t$ and the predicted value by a particular model i.e. prediction denoted by $p_d$. It is to be noted that since this value is a ratio, it is a fraction consisting of numerator and denominator areas in appropriate units. Mathematically, it is given by
 \begin{equation}
-\centering
-IoU = \frac{area({g_{t}}\cap{ p_{d }})}{area({g_{t}}\cup{ p_{d }})}
+  \centering
+  IoU = \frac{area({g_{t}}\cap{ p_{d }})}{area({g_{t}}\cup{ p_{d }})}
 \end{equation}
 As it is very obvious for any arbitrary situation $0 \leqslant $ IoU $\leqslant 1$ wherein $0$ corresponds to a null overlap and $1$ corresponds to a full overlap. However, in almost all ML/DL models we don’t go for such strict definitions rather we define what we call the IoU at $\alpha$ (or abbreviated as IoU@$\alpha$). This means any value of IoU $\geqslant \alpha$ is considered a true positive whereas any value otherwise is considered a true negative. \par
 
 Before we go ahead and define the next important metric we need to know a couple of different terms as stated below:
 \begin{itemize}
- \item \textbf{Precision} – The degree to which a model can identify only the relevant objects. It is simply the ratio of true positives and all the detections made by the model. It is given by
-\begin{equation}
-\centering
-P = \frac{True \ positives}{All \ detections \ made \ by \ the \ model}
-\end{equation}
- \item \textbf{Recall} – The degree to which the model can detect all true positives amongst all ground truths. Mathematically, it is the ratio of the number of true positives and all ground truths and is given by
-\begin{equation}
-\centering
-R = \frac{True \ positives}{All \ ground \ truths}
-\end{equation}
+  \item \textbf{Precision} – The degree to which a model can identify only the relevant objects. It is simply the ratio of true positives and all the detections made by the model. It is given by
+        \begin{equation}
+          \centering
+          P = \frac{True \ positives}{All \ detections \ made \ by \ the \ model}
+        \end{equation}
+  \item \textbf{Recall} – The degree to which the model can detect all true positives amongst all ground truths. Mathematically, it is the ratio of the number of true positives and all ground truths and is given by
+        \begin{equation}
+          \centering
+          R = \frac{True \ positives}{All \ ground \ truths}
+        \end{equation}
 
-\textbf{A good model has a high precision as well as high recall}.
+        \textbf{A good model has a high precision as well as high recall}.
 
- \item \textbf{Precision–recall curve} – It is simply the plot of the variation of precision and recall against the variation of confidence values. A good model will give high precision values even when confidence is varied significantly.
- \item \textbf{Average precision} – When the area under the precision-recall curve is calculated at the IoU@$\alpha$ threshold then we get this value. Formally, it is defined using the following integral.
-\begin{equation}
-\centering
-AP@\alpha = \int\limits_{0}^{1} p(r) \ \mathrm{d} r
-\end{equation}
+  \item \textbf{Precision–recall curve} – It is simply the plot of the variation of precision and recall against the variation of confidence values. A good model will give high precision values even when confidence is varied significantly.
+  \item \textbf{Average precision} – When the area under the precision-recall curve is calculated at the IoU@$\alpha$ threshold then we get this value. Formally, it is defined using the following integral.
+        \begin{equation}
+          \centering
+          AP@\alpha = \int\limits_{0}^{1} p(r) \ \mathrm{d} r
+        \end{equation}
 
 \end{itemize}
 
@@ -209,8 +209,8 @@ Now we are at a stage where we can understand the next important metric
 \subsection{Mean Average Precision (mAP)}
 For each class, the average precision as defined above is calculated. This roughly translates to No. of average precision values $\approx$ No. of classes. When the average of these average precision is taken we get what we know as the mean average precision. For $n$ classes we can simply calculate it as follows:
 \begin{equation}
-\centering
-mAP@\alpha = \frac{1}{n} \sum_{i=1}^{n} AP_{i}
+  \centering
+  mAP@\alpha = \frac{1}{n} \sum_{i=1}^{n} AP_{i}
 \end{equation}
 
 
@@ -225,7 +225,7 @@ The following rules for a good project using YoLo are mere \textit{thumb – rul
   \item Precision may be increased by keeping the height and width of images or video frames as a multiple of $32$.
   \item The training dataset should be such that every object to be detected corresponds to an exactly similar object in the training dataset. Similarity should be in terms of size, no. of classes to be detected ($c$), overall spatial orientation, overall illumination, augmentation (if any) etc. \par
 
-  If the size of the training dataset is $N$ and the no. of classes is stated as above then training must run for at least $Nc$ iterations.
+        If the size of the training dataset is $N$ and the no. of classes is stated as above then training must run for at least $Nc$ iterations.
   \item Training datasets should have as many \textbf{positive} examples as there are \textbf{negative} examples (i.e. images which don’t have any object to be detected). When the detection or testing run is executed, such negative examples shall return no bounding boxes. These ensure an equal sensitivity of the model to both types of images as well as eliminate a lot of post-processing operations.
   \item Sometimes it is desirable to run your detections with the {\fontfamily{qcr}\selectfont -show\_imgs} option at the end so that it can be manually verified whether the predicted bounding boxes are correct or not. Seeing the detections and detecting some anomaly could be a direct implication of training runs going wrong or some inherent problem in the dataset.
 \end{enumerate}
