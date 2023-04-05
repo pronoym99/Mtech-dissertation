@@ -24,6 +24,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-latex-base
+          
+      - name: Install titlesec package
+        run: |
+          sudo tlmgr install titlesec
 
       - name: Build PDF
         run: |
