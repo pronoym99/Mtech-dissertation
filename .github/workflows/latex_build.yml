@@ -28,10 +28,10 @@ jobs:
       - name: Build PDF
         run: |
           cd Report
-          pdflatex -interaction=nonstopmode main.tex
+          pdflatex -interaction=nonstopmode print_main.tex
           bibtex main
-          pdflatex -interaction=nonstopmode main.tex
-          pdflatex -interaction=nonstopmode main.tex
+          pdflatex -interaction=nonstopmode print_main.tex
+          pdflatex -interaction=nonstopmode print_main.tex
           rm -f *.aux *.bbl *.blg *.log *.out
 
       - name: Upload PDF artifact
