@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOME: /home/runner
+      PATH: /usr/local/texlive/2021/bin/x86_64-linux:$PATH
+      MANPATH: /usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH
+      INFOPATH: /usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,15 +32,12 @@ jobs:
           
       - name: Initialize user-mode installation
         run: |
-          export PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
-          export MANPATH="/usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH"
-          export INFOPATH="/usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH"
-          sudo tlmgr update --self
-          sudo tlmgr init-usertree
+          tlmgr update --self
+          tlmgr init-usertree
           
       - name: Install titlesec package
         run: |
-          sudo tlmgr install titlesec
+          tlmgr install titlesec
 
       - name: Build PDF
         run: |
