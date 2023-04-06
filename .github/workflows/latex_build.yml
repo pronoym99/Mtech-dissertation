@@ -16,7 +16,7 @@ jobs:
     steps:
     
       - name: Install tar
-        run:  apt-get install -y tar
+        run:  yum install tar
           
       - name: Checkout code
         uses: actions/checkout@v2
