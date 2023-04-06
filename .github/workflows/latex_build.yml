@@ -9,51 +9,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HOME: /home/runner
-      PATH: /usr/local/texlive/2021/bin/x86_64-linux:$PATH
-      MANPATH: /usr/local/texlive/2021/texmf-dist/doc/man:$MANPATH
-      INFOPATH: /usr/local/texlive/2021/texmf-dist/doc/info:$INFOPATH
+      DIR: Report
+      FILE: print_main
     steps:
-    
-      - name: Install tar
-        run:  yum install tar
-          
-      - name: Checkout code
+      - name: Set up Git repository
         uses: actions/checkout@v2
-
-      - name: Cache LaTeX packages
-        uses: actions/cache@v2
+      - name: report
+        uses: dante-ev/latex-action@latest
         with:
-          path: /usr/local/texlive
-          key: ${{ runner.os }}-texlive-${{ hashFiles('**/*.tex') }}
-          restore-keys: |
-            ${{ runner.os }}-texlive-
-
-      - name: Install LaTeX and pdflatex
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-latex-base
-          
-      - name: Initialize user-mode installation
-        run: |
-          tlmgr update --self
-          tlmgr init-usertree
-          
-      - name: Install titlesec package
-        run: |
-          tlmgr install titlesec
-
-      - name: Build PDF
-        run: |
-          cd Report
-          pdflatex -interaction=nonstopmode print_main.tex
-          bibtex main
-          pdflatex -interaction=nonstopmode print_main.tex
-          pdflatex -interaction=nonstopmode print_main.tex
-          rm -f *.aux *.bbl *.blg *.log *.out
-
-      - name: Upload PDF artifact
+          root_file: ${{ env.FILE }}
+          working_directory: ${{ env.DIR }}
+      - name: move
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.FILE }}.pdf ./github_artifacts/
+      - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: report
-          path: Report/main.pdf
+          name: ${{ env.FILE }}.pdf
+          path: ./github_artifacts
