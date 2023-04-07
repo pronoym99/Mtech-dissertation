@@ -10,12 +10,12 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           working_directory: Report
-          root_file: print_main.tex
+          root_file: main.tex
           pre_compile: "tlmgr update --self && tlmgr update --all"
           post_compile: "latexmk -c"
       - name: Upload PDF file
         uses: actions/upload-artifact@v3
         with:
           name: PDF
-          path: print_main.pdf
+          path: main.pdf
 
