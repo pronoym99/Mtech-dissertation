@@ -11,8 +11,6 @@ jobs:
         with:
           working_directory: Report
           root_file: main.tex
-          pre_compile: "tlmgr update --self && tlmgr update --all"
-          post_compile: "latexmk -c"
       - name: Upload PDF file
         uses: actions/upload-artifact@v7
         with:
