@@ -16,4 +16,5 @@ jobs:
         with:
           name: PDF
           path: Report/main.pdf
+          archive: False
 
