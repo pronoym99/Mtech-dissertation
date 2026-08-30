@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      TEX_FMT_VERSION: v0.5.7
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v7
@@ -66,9 +68,10 @@ jobs:
 
       - name: Format changed files with tex-fmt
         if: steps.changed.outputs.fmt_files != ''
-        uses: grayespinoza/tex-fmt-action@v1.0.0
-        with:
-          inputs: ${{ steps.changed.outputs.fmt_files }}
+        run: |
+          curl -sSL "https://github.com/WGUNDERWOOD/tex-fmt/releases/download/${TEX_FMT_VERSION}/tex-fmt-x86_64-linux.tar.gz" \
+            | tar -xz
+          ./tex-fmt ${{ steps.changed.outputs.fmt_files }}
 
       - name: Commit formatting changes
         if: steps.changed.outputs.fmt_files != ''
