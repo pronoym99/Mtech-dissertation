@@ -83,6 +83,17 @@ jobs:
         run: |
           echo "version=v$(date -u +'%Y.%m.%d')-${{ github.run_number }}" >> "$GITHUB_OUTPUT"
 
+      - name: Remove previous release(s)
+        if: steps.changed.outputs.build_files != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Delete every existing release and its tag, so only the new one remains.
+          gh release list --limit 100 --json tagName --jq '.[].tagName' \
+          | while read -r tag; do
+              [ -n "$tag" ] && gh release delete "$tag" --cleanup-tag --yes
+            done
+
       - name: Publish PDF as a release
         if: steps.changed.outputs.build_files != ''
         uses: softprops/action-gh-release@v3
@@ -90,9 +101,9 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           name: ${{ steps.version.outputs.version }}
           body: |
-            Automated build of the LaTeX document.
+            Latest build of the LaTeX document.
 
+            - Version: ${{ steps.version.outputs.version }}
             - Commit: ${{ github.sha }}
-            - Built: ${{ steps.version.outputs.version }}
           files: Report/main.pdf
           make_latest: true
