@@ -131,3 +131,4 @@ This section presents a set of guidelines for the two types of deployment detail
 \item Classify whether you would be dealing with batch workflows or predictions by your ML models in real-time as detailed in sections \ref{vm} and \ref{ezmeral} respectively as this shall greatly affect your outcome.
 
 \item If you are dealing with batch workflows as in section \ref{vm}, the order of fetching and deleting files is paramount. Classify files into input, files produced irrespective of the status of the result and files produced only on successful execution. Order them by size and the sequential points of failure. Delete the largest input file(s) first followed by sequential cycles of sending files to the remote server and deleting them.
+\end{enumerate}
