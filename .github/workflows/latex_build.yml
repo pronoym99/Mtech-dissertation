@@ -103,9 +103,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # Runs only after a successful publish. Keep the newest release
-          # (the one just created) and delete every older release + its tag.
+          # (the one just created) and delete every OLDER release entry.
+          # The git tags are intentionally kept (no --cleanup-tag) so previous
+          # code states remain browsable via the tag selector.
           gh release list --limit 100 --json tagName,createdAt \
             --jq 'sort_by(.createdAt) | reverse | .[1:] | .[].tagName' \
           | while read -r tag; do
-              [ -n "$tag" ] && gh release delete "$tag" --cleanup-tag --yes
+              [ -n "$tag" ] && gh release delete "$tag" --yes
             done
