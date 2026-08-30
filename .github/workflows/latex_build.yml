@@ -8,28 +8,61 @@ on:
       - '**/*.cls'
       - '**/*.sty'
       - 'Report/images/**'
+      - 'Report/auxiliary_pages.pdf'
   workflow_dispatch:
 jobs:
   build_latex:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v4
         with:
           working_directory: Report
           root_file: main.tex
+
       - name: Upload PDF file
         uses: actions/upload-artifact@v7
         with:
           name: PDF
           path: Report/main.pdf
-          archive: false
-      - name: Format LaTeX with tex-fmt
+          if-no-files-found: error
+
+      - name: Determine changed LaTeX source files
+        id: changed
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] \
+             && [ -n "${{ github.event.before }}" ] \
+             && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE="HEAD~1"
+          fi
+          # Fall back to the empty tree if BASE doesn't exist (e.g. first commit).
+          if ! git rev-parse --verify --quiet "$BASE" >/dev/null; then
+            BASE="$(git hash-object -t tree /dev/null)"
+          fi
+          # Only Added/Copied/Modified source files; pathspec excludes PDFs and everything else.
+          FILES="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD -- \
+                    '*.tex' '*.bib' '*.cls' '*.sty' | tr '\n' ' ')"
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "Changed source files: ${FILES:-<none>}"
+
+      - name: Format changed files with tex-fmt
+        if: steps.changed.outputs.files != ''
         uses: grayespinoza/tex-fmt-action@v1.0.0
+        with:
+          inputs: ${{ steps.changed.outputs.files }}
+
       - name: Commit formatting changes
+        if: steps.changed.outputs.files != ''
         uses: stefanzweifel/git-auto-commit-action@v7.1.0
         with:
-          commit_message: "style: format LaTeX with tex-fmt"
-
+          commit_message: "style: format LaTeX with tex-fmt [skip ci]"
+          file_pattern: '*.tex *.bib *.cls *.sty'
