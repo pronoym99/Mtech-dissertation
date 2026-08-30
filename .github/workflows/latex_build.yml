@@ -76,3 +76,23 @@ jobs:
         with:
           commit_message: "style: format LaTeX with tex-fmt [skip ci]"
           file_pattern: '*.tex *.bib *.cls *.sty'
+
+      - name: Compute release version
+        id: version
+        if: steps.changed.outputs.build_files != ''
+        run: |
+          echo "version=v$(date -u +'%Y.%m.%d')-${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish PDF as a release
+        if: steps.changed.outputs.build_files != ''
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
+          body: |
+            Automated build of the LaTeX document.
+
+            - Commit: ${{ github.sha }}
+            - Built: ${{ steps.version.outputs.version }}
+          files: Report/main.pdf
+          make_latest: true
