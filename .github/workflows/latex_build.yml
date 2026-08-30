@@ -36,13 +36,15 @@ jobs:
             BASE="$(git hash-object -t tree /dev/null)"
           fi
 
-          # Files that affect the compiled PDF (includes images + the input PDF).
-          BUILD_FILES="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD -- \
-                          '*.tex' '*.bib' '*.cls' '*.sty' \
-                          'Report/images' 'Report/auxiliary_pages.pdf' | tr '\n' ' ')"
+          # Compute the changed-file set once, then filter for each purpose.
+          CHANGED="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD)"
           # Source files that changed (used only to decide whether to run tex-fmt).
-          FMT_FILES="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD -- \
-                        '*.tex' '*.bib' '*.cls' '*.sty' | tr '\n' ' ')"
+          FMT_FILES="$(printf '%s\n' "$CHANGED" \
+                        | grep -E '\.(tex|bib|cls|sty)$' | tr '\n' ' ')"
+          # Files that affect the compiled PDF (adds images + the input PDF).
+          BUILD_FILES="$(printf '%s\n' "$CHANGED" \
+                          | grep -E '\.(tex|bib|cls|sty)$|^Report/images/|^Report/auxiliary_pages\.pdf$' \
+                          | tr '\n' ' ')"
 
           echo "build_files=$BUILD_FILES" >> "$GITHUB_OUTPUT"
           echo "fmt_files=$FMT_FILES" >> "$GITHUB_OUTPUT"
