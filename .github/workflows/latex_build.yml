@@ -21,20 +21,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compile LaTeX document
-        uses: xu-cheng/latex-action@v4
-        with:
-          working_directory: Report
-          root_file: main.tex
-
-      - name: Upload PDF file
-        uses: actions/upload-artifact@v7
-        with:
-          name: PDF
-          path: Report/main.pdf
-          if-no-files-found: error
-
-      - name: Determine changed LaTeX source files
+      - name: Determine changed files
         id: changed
         run: |
           if [ "${{ github.event_name }}" = "push" ] \
@@ -48,20 +35,43 @@ jobs:
           if ! git rev-parse --verify --quiet "$BASE" >/dev/null; then
             BASE="$(git hash-object -t tree /dev/null)"
           fi
-          # Only Added/Copied/Modified source files; pathspec excludes PDFs and everything else.
-          FILES="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD -- \
-                    '*.tex' '*.bib' '*.cls' '*.sty' | tr '\n' ' ')"
-          echo "files=$FILES" >> "$GITHUB_OUTPUT"
-          echo "Changed source files: ${FILES:-<none>}"
+
+          # Files that affect the compiled PDF (includes images + the input PDF).
+          BUILD_FILES="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD -- \
+                          '*.tex' '*.bib' '*.cls' '*.sty' \
+                          'Report/images' 'Report/auxiliary_pages.pdf' | tr '\n' ' ')"
+          # Files tex-fmt may format (source only; never PDFs/images).
+          FMT_FILES="$(git diff --name-only --diff-filter=ACM "$BASE" HEAD -- \
+                        '*.tex' '*.bib' '*.cls' '*.sty' | tr '\n' ' ')"
+
+          echo "build_files=$BUILD_FILES" >> "$GITHUB_OUTPUT"
+          echo "fmt_files=$FMT_FILES" >> "$GITHUB_OUTPUT"
+          echo "Build-affecting changes: ${BUILD_FILES:-<none>}"
+          echo "Formattable changes:     ${FMT_FILES:-<none>}"
+
+      - name: Compile LaTeX document
+        if: steps.changed.outputs.build_files != ''
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: Report
+          root_file: main.tex
+
+      - name: Upload PDF file
+        if: steps.changed.outputs.build_files != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: PDF
+          path: Report/main.pdf
+          if-no-files-found: error
 
       - name: Format changed files with tex-fmt
-        if: steps.changed.outputs.files != ''
+        if: steps.changed.outputs.fmt_files != ''
         uses: grayespinoza/tex-fmt-action@v1.0.0
         with:
-          inputs: ${{ steps.changed.outputs.files }}
+          inputs: ${{ steps.changed.outputs.fmt_files }}
 
       - name: Commit formatting changes
-        if: steps.changed.outputs.files != ''
+        if: steps.changed.outputs.fmt_files != ''
         uses: stefanzweifel/git-auto-commit-action@v7.1.0
         with:
           commit_message: "style: format LaTeX with tex-fmt [skip ci]"
