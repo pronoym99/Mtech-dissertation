@@ -17,4 +17,10 @@ jobs:
           name: PDF
           path: Report/main.pdf
           archive: false
+      - name: Format LaTeX with tex-fmt
+        uses: grayespinoza/tex-fmt-action@v1.0.0
+      - name: Commit formatting changes
+        uses: stefanzweifel/git-auto-commit-action@v7.1.0
+        with:
+          commit_message: "style: format LaTeX with tex-fmt"
 
